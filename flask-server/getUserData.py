@@ -1,4 +1,4 @@
-#Python Class for all admin related queries
+#Python Class for all user related queries
 #Each method will retrieve a different set of data
 
 from connections import mysql

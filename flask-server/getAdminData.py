@@ -13,6 +13,13 @@ class getAdminDatas(object):
         aData = self.cursor.fetchall()
         self.cursor.close()
         return aData
+    
+    def getAllAdminFnames(self):
+        self.cursor = mysql.connection.cursor()
+        self.cursor.execute("SELECT fname FROM Admin")
+        aData = self.cursor.fetchall()
+        self.cursor.close()
+        return aData
 
 
 
