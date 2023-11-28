@@ -3,6 +3,7 @@ from flask import Flask,request,jsonify
 from connections import app
 import getUserData
 import getAdminData
+import postAdminData
 
 # Example API Route
 
@@ -38,6 +39,33 @@ def User_fname():
     uData = userData.getAllUserFnames()
     response = jsonify({"User_fname":uData}) #dont put spaces on the in the key name hence the  "_"
     return response
+
+@app.route("/Admin_fname")
+def Admin_fname():
+    adminData = getAdminData.getAdminDatas()
+    aData = adminData.getAllAdminFnames()
+    response = jsonify({"User_fname":aData}) #dont put spaces on the in the key name hence the  "_"
+    return response
+
+@app.route("/addAdmin", methods=["POST"], strict_slashes=False)
+def add_User():
+    a_email = request.json['a_email']
+    admin_fname = request.json['fname']
+    admin_lname = request.json['lname']
+    
+
+    postAdmin = postAdminData.postAdminDatas()
+    post = postAdmin.addNewAdmin(a_email, admin_fname, admin_lname)
+
+    response = jsonify({a_email:[admin_fname, admin_lname], "status":post})
+    return  response
+
+
+
+#call the query to insert from here
+    
+
+    
 
 
 
