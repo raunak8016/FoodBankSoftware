@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 
-// import APIService from "./APIService";
-
 function App() {
   const [data, setData] = useState([{}]);
-  const [UserNames, setUserNames] = useState([{}]);
+  const [UsersNames, setUsersNames] = useState([{}]);
 
 //   useEffect(() => {
 //     fetch("/members")
@@ -19,7 +17,7 @@ function App() {
     fetch("/User_fname")
       .then((res) => res.json())
       .then((data) => {
-        setUserNames(data);
+        setUsersNames(data);
         console.log(data);
       });
   }, []);
@@ -82,37 +80,16 @@ const App = () => {
 
       {/*------------------------ */}
       <ul>
-        {typeof UserNames.User_fname === "undefined" ? (
+        {typeof UsersNames.User_fname === "undefined" ? (
           <p>loading...</p>
         ) : (
-          UserNames.User_fname.map((fname, index) => (
+          UsersNames.User_fname.map((fname, index) => (
             <li key={index}>{fname[0]}</li>
           ))
         )}
       </ul>
-      <button>Login</button>
     </div>
   );
 }
-
-// function Form({ addedAdmin }) {
-//   const [a_email, setA_email] = useState("JohnLee@gmail.com");
-//   const [fname, setFname] = useState("John");
-//   const [lname, setLname] = useState("Lee");
-
-//   const AddNewAdmin = () => {
-//     APIService.AddNewAdmin({ a_email, fname, lname })
-//       .then((res) => addedAdmin(res))
-//       .catch((error) => console.log(error));
-//   };
-
-//   function handleSubmit(e) {
-//     e.preventDefault();
-//     AddNewAdmin();
-//     setA_email("");
-//     setFname("");
-//     setLname("");
-//   }
-// }
 
 export default App;

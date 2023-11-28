@@ -12,3 +12,21 @@ export default class APIService {
     }
   }
 }
+
+// import APIService from "./APIService";
+// function Form({ addedAdmin }) {
+//     const [a_email, setA_email] = useState("JohnLee@gmail.com");
+//     const [fname, setFname] = useState("John");
+//     const [lname, setLname] = useState("Lee");
+
+//     const AddNewAdmin = () => {
+//       APIService.AddNewAdmin({ a_email, fname, lname })
+//         .then((res) => addedAdmin(res))
+//         .catch((error) => console.log(error));
+//     };
+
+//     function handleSubmit(e) {
+//       e.preventDefault();
+//       add;
+//     }
+//   }
