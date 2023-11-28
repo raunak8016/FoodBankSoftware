@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const App = () => {
   const [userType, setUserType] = useState('user');
   const [email, setEmail] = useState('');
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -18,22 +19,50 @@ const App = () => {
     setEmail(event.target.value);
   };
 
-  const handleLogin = () => {
-    // Implement your login logic here
+  const handleLogin = async () => {
     try {
-        // Assuming successful login logic here
+        const response = await axios.post("/login", {
+          email: email,
+          userType: userType,
+        });
   
-        // Navigate to the dashboard
-        navigate('/user_dashboard');
+        // Assuming the Flask server responds with some data
+        const responseData = response.data;
+
+        console.log('Login response:', responseData);
+
+        if (userType === 'admin' && responseData === 'true') {
+            // Navigate to the admin dashboard
+            navigate('/admin_dashboard');
+        } else if (userType === 'user' && responseData === 'true') {
+            // Navigate to the user dashboard
+            navigate('/user_dashboard');
+        } else {
+            // Display error message for invalid email and user type
+            setError('Error: Invalid email for user type!');
+        }
+
+        // Reset error state on successful login
+        setError(null);
+
+        console.log('Login response:', responseData);
+  
       } catch (error) {
         console.error('Error during login:', error);
         // Handle error, show an error message, etc.
-      }
+        setError('Error: An unexpected error occurred. Please try again.');
+    }
+
   };
 
   const handleSignup = () => {
-    // Implement your signup logic here
-    console.log(`Signing up as ${userType} with email: ${email}`);
+    try {
+        // Assuming successful login logic here
+  
+        navigate('/user_signup')
+      } catch (error) {
+        console.error('Error during signup:', error);
+      }
   };
 
   return (
@@ -51,10 +80,11 @@ const App = () => {
           Email:
           <input type="text" value={email} onChange={handleEmailChange} />
         </label>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
       </div>
       <div>
         <button onClick={handleLogin}>Login</button>
-        <button onClick={handleSignup}>Signup</button>
+        {userType === 'user' && <button onClick={handleSignup}>Signup</button>}
       </div>
     </div>
   );
