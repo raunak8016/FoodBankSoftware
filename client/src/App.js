@@ -53,14 +53,15 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './components/Login';
-import Dashboard from './components/UserDashboard';
+import UserDashboard from './components/UserDashboard';
 
 const App = () => {
   return (
     <Router>
-      <Routes>
+      
+      <Routes> 
         <Route path="/" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/user_dashboard" element={<UserDashboard />} />
       </Routes>
     </Router>
   );
