@@ -10,6 +10,13 @@ import getAdminData
 def members():
     return {"members": ["Member 1", "Member 2"]}
 
+@app.route("/items")
+def items():
+    return {"items": {
+        "apple":[45,'fridge','jan 1'],
+        "orange":[3,'fridge','dec 20']
+    }}
+
 
 @app.route("/Admin")
 def Admin():
