@@ -60,8 +60,8 @@ const App = () => {
     <Router>
       
       <Routes> 
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<UserDashboard />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/user_dashboard" element={<UserDashboard />} />
       </Routes>
     </Router>
   );
