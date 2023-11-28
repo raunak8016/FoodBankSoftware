@@ -1,7 +1,8 @@
 import React from 'react';
 import Banner from './Banner';
+import Calendar from 'react-calendar';
 
-const ClientDashboard = () => {
+const UserDashboard = () => {
   return (
     <div>
       <Banner/>
@@ -11,6 +12,8 @@ const ClientDashboard = () => {
       <div>
         <h2>Hamper Request</h2>
         <p>Select your preferred pickup date: </p>
+
+        <Calendar/>
 
         <p>Please keep in mind that being more than 15 minutes late will require you
           to reschedule your pickup. If you do not reschedule, your hamper will be unpacked,
@@ -22,4 +25,4 @@ const ClientDashboard = () => {
   );
 };
 
-export default ClientDashboard;
+export default UserDashboard;
