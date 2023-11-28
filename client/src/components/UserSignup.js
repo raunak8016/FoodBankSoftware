@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Banner from './Banner'; // Import the Banner component
+import axios from 'axios';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
@@ -30,9 +31,35 @@ const Signup = () => {
     setAddress(event.target.value);
   };
 
-  const handleSignup = () => {
-    // Implement your signup logic here
-    console.log('Signup details:', { email, firstName, lastName, userType, address });
+  const handleSignup = async () => {
+    try {
+      const response = await axios.post('user_signup', {
+        email,
+        firstName,
+        lastName,
+        userType,
+        address,
+      });
+
+      const responseData = response.data;
+      console.log('Signup response:', responseData);
+
+      // Handle the response data as needed (e.g., show success message, navigate, etc.)
+
+      // For example, if your backend responds with a success message
+      alert('Signup successful!');
+
+      // Navigate to the desired page after successful signup
+      if (responseData==='success') {
+        navigate('/user_dashboard');
+      }
+    } catch (error) {
+      console.error('Error during signup:', error);
+
+      // Handle error, show an error message, etc.
+      // For example, if your backend responds with an error message
+      alert('Signup failed. Please try again.');
+    }
   };
 
   const handleBack = () => {
