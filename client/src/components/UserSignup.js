@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Banner from './Banner'; // Import the Banner component
-import axios from 'axios';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Banner from "./Banner"; // Import the Banner component
+import axios from "axios";
 
 const Signup = () => {
-  const [email, setEmail] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [userType, setUserType] = useState('client');
-  const [address, setAddress] = useState('');
+  const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [userType, setUserType] = useState("client");
+  const [address, setAddress] = useState("");
   const navigate = useNavigate();
 
   const handleEmailChange = (event) => {
@@ -33,7 +33,7 @@ const Signup = () => {
 
   const handleSignup = async () => {
     try {
-      const response = await axios.post('user_signup', {
+      const response = await axios.post("user_signup", {
         email,
         firstName,
         lastName,
@@ -42,29 +42,29 @@ const Signup = () => {
       });
 
       const responseData = response.data;
-      console.log('Signup response:', responseData);
+      console.log("Signup response:", responseData);
 
       // Handle the response data as needed (e.g., show success message, navigate, etc.)
 
       // For example, if your backend responds with a success message
-      alert('Signup successful!');
+      alert("Signup successful!");
 
       // Navigate to the desired page after successful signup
-      if (responseData==='success') {
-        navigate('/user_dashboard');
+      if (responseData === "success") {
+        navigate("/user_dashboard");
       }
     } catch (error) {
-      console.error('Error during signup:', error);
+      console.error("Error during signup:", error);
 
       // Handle error, show an error message, etc.
       // For example, if your backend responds with an error message
-      alert('Signup failed. Please try again.');
+      alert("Signup failed. Please try again.");
     }
   };
 
   const handleBack = () => {
     // Navigate back to the home page (/)
-    navigate('/');
+    navigate("/");
   };
 
   return (
@@ -80,7 +80,11 @@ const Signup = () => {
       <div>
         <label>
           First Name:
-          <input type="text" value={firstName} onChange={handleFirstNameChange} />
+          <input
+            type="text"
+            value={firstName}
+            onChange={handleFirstNameChange}
+          />
         </label>
       </div>
       <div>
@@ -98,7 +102,7 @@ const Signup = () => {
           </select>
         </label>
       </div>
-      {userType === 'client' && (
+      {userType === "client" && (
         <div>
           <label>
             Address:

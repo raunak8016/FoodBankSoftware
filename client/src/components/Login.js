@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
-import Banner from './Banner';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import Banner from "./Banner";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const App = () => {
-  const [userType, setUserType] = useState('user');
-  const [email, setEmail] = useState('');
+  const [userType, setUserType] = useState("User");
+  const [email, setEmail] = useState("");
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
-
   const handleToggle = () => {
-    setUserType((prevType) => (prevType === 'user' ? 'admin' : 'user'));
+    setUserType((prevType) => (prevType === "User" ? "Admin" : "User"));
   };
 
   const handleEmailChange = (event) => {
@@ -21,48 +20,46 @@ const App = () => {
 
   const handleLogin = async () => {
     try {
-        const response = await axios.post("/login", {
-          email: email,
-          userType: userType,
-        });
-  
-        // Assuming the Flask server responds with some data
-        const responseData = response.data;
+      const response = await axios.post("/login", {
+        email: email,
+        userType: userType,
+      });
 
-        console.log('Login response:', responseData);
+      // Assuming the Flask server responds with some data
+      const responseData = response.data;
 
-        if (userType === 'admin' && responseData === 'true') {
-            // Navigate to the admin dashboard
-            navigate('/admin_dashboard');
-        } else if (userType === 'user' && responseData === 'true') {
-            // Navigate to the user dashboard
-            navigate('/user_dashboard');
-        } else {
-            // Display error message for invalid email and user type
-            setError('Error: Invalid email for user type!');
-        }
+      console.log("Login response:", responseData);
 
-        // Reset error state on successful login
-        setError(null);
+      if (userType === "Admin" && responseData === "true") {
+        // Navigate to the admin dashboard
+        navigate("/admin_dashboard");
+      } else if (userType === "User" && responseData === "true") {
+        // Navigate to the user dashboard
+        navigate("/user_dashboard");
+      } else {
+        // Display error message for invalid email and user type
+        setError("Error: Invalid email for user type!");
+      }
 
-        console.log('Login response:', responseData);
-  
-      } catch (error) {
-        console.error('Error during login:', error);
-        // Handle error, show an error message, etc.
-        setError('Error: An unexpected error occurred. Please try again.');
+      // Reset error state on successful login
+      setError(null);
+
+      console.log("Login response:", responseData);
+    } catch (error) {
+      console.error("Error during login:", error);
+      // Handle error, show an error message, etc.
+      setError("Error: An unexpected error occurred. Please try again.");
     }
-
   };
 
   const handleSignup = () => {
     try {
-        // Assuming successful login logic here
-  
-        navigate('/user_signup')
-      } catch (error) {
-        console.error('Error during signup:', error);
-      }
+      // Assuming successful login logic here
+
+      navigate("/user_signup");
+    } catch (error) {
+      console.error("Error during signup:", error);
+    }
   };
 
   return (
@@ -80,11 +77,11 @@ const App = () => {
           Email:
           <input type="text" value={email} onChange={handleEmailChange} />
         </label>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
       </div>
       <div>
         <button onClick={handleLogin}>Login</button>
-        {userType === 'user' && <button onClick={handleSignup}>Signup</button>}
+        {userType === "User" && <button onClick={handleSignup}>Signup</button>}
       </div>
     </div>
   );

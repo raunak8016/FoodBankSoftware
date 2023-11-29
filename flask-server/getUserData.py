@@ -21,6 +21,14 @@ class getUserDatas(object):
         uData = self.cursor.fetchall()
         self.cursor.close()
         return uData
+    
+    def getAUser_u_email(self, u_email):
+        self.cursor = mysql.connection.cursor()
+        self.cursor.execute(f"""SELECT u_email FROM User WHERE u_email = '{u_email}'""")
+        uData = self.cursor.fetchall()
+        self.cursor.close()
+        return uData
+
 
 
 
