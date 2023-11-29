@@ -4,6 +4,7 @@ from connections import app
 import getUserData
 import getAdminData
 import postAdminData
+import postUserData
 import getUserData
 import getSupplierData
 
@@ -85,8 +86,7 @@ def login():
         data = request.get_json()
         email = data.get('email') #get either a_email or u_email
         userType = data.get('userType')
-        print(email)
-        print(userType)
+        
 
         personData = []
 
@@ -111,8 +111,50 @@ def login():
             
 
 
+@app.route("/signUp", methods = ['POST'])
+def signUp():
+    try:
+        data = request.get_json()
+        email = data.get('email') #get either a_email or u_email
+        firstName = data.get('firstName')
+        lastName = data.get('lastName')
+        userType = data.get('userType')
+        address = data.get('address')
 
-#call the query to insert from here
+
+        client_flag = 0
+        donor_flag = 0
+        postUser = postUserData.postUserDatas()
+        userData = getUserData.getUserDatas()
+
+        personData = []
+
+        if userType == "client":
+            client_flag = 1
+            donor_flag = 0
+
+            post = postUser.addNewClient(email, firstName, lastName, client_flag, donor_flag, address) #add a client
+        elif userType == "donor":
+            client_flag = 0
+            donor_flag = 1
+
+            post = postUser.addNewDonor(email, firstName, lastName, client_flag, donor_flag) #add a donor
+
+        if post == "Done!!": #if the entry was added successfully
+            personData = userData.getAUser_u_email(email)
+
+            if len(personData) == 1:        
+                return jsonify({"status":"true"}) #if the user exists return true
+            else:
+                return jsonify({"status":"false","reason":"user not added to database"}) #if the user exists return false
+        else: #the email is either a duplacate entry or some other error
+            return jsonify({"status":"false","reason":"duplicate entry"}) #if the user exists return false
+        
+        
+
+    except Exception as e:
+        print('Error during login:', str(e))
+        return jsonify({'error': 'An unexpected error occurred.'})
     
 
     

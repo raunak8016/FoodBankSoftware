@@ -8,11 +8,22 @@ class postAdminDatas(object):
         self.cursor = mysql.connection.cursor()
 
     def addNewAdmin(self, a_email, fname, lname):
-        self.cursor = mysql.connection.cursor()
-        self.cursor.execute(f"""INSERT INTO Admin (a_email, fname, lname) VALUES ({a_email}, {fname}, {lname})""")
-        mysql.connection.commit()
-        self.cursor.close()
-        return f"Done!!"
+        try:
+            self.cursor = mysql.connection.cursor()
+            # Use parameterized queries to avoid SQL injection
+            self.cursor.execute(
+                "INSERT INTO Admin (a_email, fname, lname) "
+                "VALUES (%s, %s, %s)",
+                (a_email, fname, lname)
+            )
+            mysql.connection.commit()
+            self.cursor.close()
+            return "Done!!"
+        except Exception as e:
+            print('Error in addNewDonor:', str(e))
+            return "Failed to add donor"
+
+    
 
 
    
