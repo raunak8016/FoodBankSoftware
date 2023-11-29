@@ -127,7 +127,7 @@ def signUp():
         postUser = postUserData.postUserDatas()
         userData = getUserData.getUserDatas()
 
-        personData = []
+    
 
         if userType == "client":
             client_flag = 1
@@ -141,6 +141,8 @@ def signUp():
             post = postUser.addNewDonor(email, firstName, lastName, client_flag, donor_flag) #add a donor
 
         if post == "Done!!": #if the entry was added successfully
+            personData = []
+            
             personData = userData.getAUser_u_email(email)
 
             if len(personData) == 1:        
