@@ -51,7 +51,7 @@ const Signup = () => {
         alert("Signup successful!");
       } else {
         alert("Signup failed. Please try again.");
-        const reason = responseData.status;
+        const reason = responseData.reason;
         console.log("faliure reason:", reason);
       }
 
