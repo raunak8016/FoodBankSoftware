@@ -100,9 +100,9 @@ def login():
             personData = userData.getAUser_u_email(email)
 
         if len(personData) == 1:        
-            return jsonify({"success":True}) #if the user exists return true
+            return jsonify({"status":"true"}) #if the user exists return true
         else:
-            return jsonify({"success":False}) #if the user exists return false
+            return jsonify({"status":"false"}) #if the user exists return false
         
 
     except Exception as e:

@@ -31,11 +31,10 @@ const App = () => {
       });
 
       // Assuming the Flask server responds with some data
-      const responseData = response.data;
+      const responseData = response.data.status;
 
       // for testing purposes only
       // const responseData = "true";
-
 
       console.log("Login response:", responseData);
 
@@ -52,7 +51,6 @@ const App = () => {
       } else {
         setError("Error: Invalid email for user type!");
       }
-
 
       console.log("Login response:", responseData);
     } catch (error) {
@@ -71,7 +69,7 @@ const App = () => {
       setShowUserDashboard(false);
     }
     setShowLogin(true);
-    setEmail('');
+    setEmail("");
   };
 
   const handleSignup = () => {
@@ -84,30 +82,43 @@ const App = () => {
 
   return (
     <div>
-      {showLogin==true && (
-      <div>
-      <Banner />
-      <h1>Login/Signup Page</h1>
-      <div>
-        <label>
-          User Type:
-          <button onClick={handleToggle}>{userType}</button>
-        </label>
-      </div>
-      <div>
-        <label>
-          Email:
-          <input type="text" value={email} onChange={handleEmailChange} />
-        </label>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-      </div>
-      <div>
-        <button onClick={handleLogin}>Login</button>
-        {userType === "User" && <button onClick={handleSignup}>Signup</button>}
-      </div>
-      </div>)}
-      {showAdminDashboard==true && <AdminDashboard email={email} handleLogout={handleLogout}></AdminDashboard>}
-      {showUserDashboard==true && <UserDashboard email={email} handleLogout={handleLogout}></UserDashboard>}
+      {showLogin == true && (
+        <div>
+          <Banner />
+          <h1>Login/Signup Page</h1>
+          <div>
+            <label>
+              User Type:
+              <button onClick={handleToggle}>{userType}</button>
+            </label>
+          </div>
+          <div>
+            <label>
+              Email:
+              <input type="text" value={email} onChange={handleEmailChange} />
+            </label>
+            {error && <p style={{ color: "red" }}>{error}</p>}
+          </div>
+          <div>
+            <button onClick={handleLogin}>Login</button>
+            {userType === "User" && (
+              <button onClick={handleSignup}>Signup</button>
+            )}
+          </div>
+        </div>
+      )}
+      {showAdminDashboard == true && (
+        <AdminDashboard
+          email={email}
+          handleLogout={handleLogout}
+        ></AdminDashboard>
+      )}
+      {showUserDashboard == true && (
+        <UserDashboard
+          email={email}
+          handleLogout={handleLogout}
+        ></UserDashboard>
+      )}
     </div>
   );
 };
