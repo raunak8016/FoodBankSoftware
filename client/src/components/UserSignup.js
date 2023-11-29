@@ -45,13 +45,20 @@ const Signup = () => {
       const responseData = response.data;
       console.log("Signup response:", responseData);
 
+      const success = responseData.status;
+
+      if (success == "true") {
+        alert("Signup successful!");
+      } else {
+        alert("Signup failed. Please try again.");
+        const reason = responseData.status;
+        console.log("faliure reason:", reason);
+      }
+
       // Handle the response data as needed (e.g., show success message, navigate, etc.)
 
-      // For example, if your backend responds with a success message
-      alert("Signup successful!");
-
       // Navigate to the desired page after successful signup
-      if (responseData === "success") {
+      if (success === "true") {
         navigate("/user_dashboard");
       }
     } catch (error) {
