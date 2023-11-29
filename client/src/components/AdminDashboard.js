@@ -1,10 +1,17 @@
 import React from 'react';
+import Banner from './Banner';
 
-const AdminDashboard = () => {
+import { useState } from 'react';
+
+
+const AdminDashboard = ({email, handleLogout}) => {
   return (
     <div>
-      <h2>Admin Dashboard</h2>
-      <p>Welcome to your dashboard!</p>
+      <Banner />
+      <div>
+        <h2>Admin Dashboard</h2>
+      </div>
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };

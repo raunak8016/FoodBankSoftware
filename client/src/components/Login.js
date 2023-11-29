@@ -2,11 +2,16 @@ import React, { useState } from "react";
 import Banner from "./Banner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import AdminDashboard from "./AdminDashboard";
+import UserDashboard from "./UserDashboard";
 
 const App = () => {
   const [userType, setUserType] = useState("User");
   const [email, setEmail] = useState("");
   const [error, setError] = useState(null);
+  const [showLogin, setShowLogin] = useState(true);
+  const [showAdminDashboard, setShowAdminDashboard] = useState(false);
+  const [showUserDashboard, setShowUserDashboard] = useState(false);
 
   const navigate = useNavigate();
 
@@ -28,21 +33,26 @@ const App = () => {
       // Assuming the Flask server responds with some data
       const responseData = response.data;
 
+      // for testing purposes only
+      // const responseData = "true";
+
+
       console.log("Login response:", responseData);
 
       if (userType === "Admin" && responseData === "true") {
         // Navigate to the admin dashboard
-        navigate("/admin_dashboard");
+        setShowLogin(false);
+        setShowAdminDashboard(true);
+        setError(null);
       } else if (userType === "User" && responseData === "true") {
         // Navigate to the user dashboard
-        navigate("/user_dashboard");
+        setShowLogin(false);
+        setShowUserDashboard(true);
+        setError(null);
       } else {
-        // Display error message for invalid email and user type
         setError("Error: Invalid email for user type!");
       }
 
-      // Reset error state on successful login
-      setError(null);
 
       console.log("Login response:", responseData);
     } catch (error) {
@@ -52,10 +62,20 @@ const App = () => {
     }
   };
 
+  const handleLogout = () => {
+    console.log("logging out");
+    if (showAdminDashboard) {
+      setShowAdminDashboard(false);
+    }
+    if (showUserDashboard) {
+      setShowUserDashboard(false);
+    }
+    setShowLogin(true);
+    setEmail('');
+  };
+
   const handleSignup = () => {
     try {
-      // Assuming successful login logic here
-
       navigate("/user_signup");
     } catch (error) {
       console.error("Error during signup:", error);
@@ -64,6 +84,8 @@ const App = () => {
 
   return (
     <div>
+      {showLogin==true && (
+      <div>
       <Banner />
       <h1>Login/Signup Page</h1>
       <div>
@@ -83,6 +105,9 @@ const App = () => {
         <button onClick={handleLogin}>Login</button>
         {userType === "User" && <button onClick={handleSignup}>Signup</button>}
       </div>
+      </div>)}
+      {showAdminDashboard==true && <AdminDashboard email={email} handleLogout={handleLogout}></AdminDashboard>}
+      {showUserDashboard==true && <UserDashboard email={email} handleLogout={handleLogout}></UserDashboard>}
     </div>
   );
 };

@@ -1,15 +1,17 @@
 import React from 'react';
 import Banner from './Banner';
-
 import { useState } from 'react';
 
-const UserDashboard = () => {
+const UserDashboard = ({email, handleLogout}) => {
 
   const [date, setDate] = useState('')
+  const [ch_email, setEmail] = useState(email);
+
 
   const handleDateChange = (event) => {
     setDate(event.target.value);
     console.log(event.target.value);
+    console.log(ch_email);
   }
 
   return (
@@ -35,6 +37,7 @@ const UserDashboard = () => {
           
         <p label="low/missing"></p>
       </div>
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };
