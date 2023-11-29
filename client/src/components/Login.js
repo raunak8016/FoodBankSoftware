@@ -82,7 +82,7 @@ const App = () => {
 
   return (
     <div>
-      {showLogin == true && (
+      {showLogin === true && (
         <div>
           <Banner />
           <h1>Login/Signup Page</h1>
@@ -107,13 +107,13 @@ const App = () => {
           </div>
         </div>
       )}
-      {showAdminDashboard == true && (
+      {showAdminDashboard === true && (
         <AdminDashboard
           email={email}
           handleLogout={handleLogout}
         ></AdminDashboard>
       )}
-      {showUserDashboard == true && (
+      {showUserDashboard === true && (
         <UserDashboard
           email={email}
           handleLogout={handleLogout}

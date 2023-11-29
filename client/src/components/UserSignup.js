@@ -47,7 +47,7 @@ const Signup = () => {
 
       const success = responseData.status;
 
-      if (success == "true") {
+      if (success === "true") {
         alert("Signup successful!");
       } else {
         alert("Signup failed. Please try again.");
@@ -56,11 +56,6 @@ const Signup = () => {
       }
 
       // Handle the response data as needed (e.g., show success message, navigate, etc.)
-
-      // Navigate to the desired page after successful signup
-      if (success === "true") {
-        navigate("/user_dashboard");
-      }
     } catch (error) {
       console.error("Error during signup:", error);
 
