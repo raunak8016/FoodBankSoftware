@@ -1,8 +1,11 @@
 import React from 'react';
 import Banner from './Banner';
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-const AdminDashboard = ({ email, handleLogout }) => {
+
+const AdminDashboard = () => {
   // State to manage the visibility of different sections
   const [showOrders, setShowOrders] = useState(false);
   const [showClientDonations, setShowClientDonations] = useState(false);
@@ -10,10 +13,19 @@ const AdminDashboard = ({ email, handleLogout }) => {
   const [showFulfillOrders, setShowFulfillOrders] = useState(false);
   const [showInventory, setShowInventory] = useState(false);
 
+  const { email } = useParams();
+  const navigate = useNavigate();
+
+
+  const handleLogout = () => {
+    navigate("/");
+  };
+
   return (
     <div>
       <Banner />
       <div>
+        <p>Email Value: {email}</p>
         <h2>Admin Dashboard</h2>
         <button onClick={() => setShowOrders(!showOrders)}>Order from Supplier</button>
         <button onClick={() => setShowClientDonations(!showClientDonations)}>Add Client Donation</button>

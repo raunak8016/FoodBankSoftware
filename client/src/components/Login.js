@@ -10,8 +10,6 @@ const App = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState(null);
   const [showLogin, setShowLogin] = useState(true);
-  const [showAdminDashboard, setShowAdminDashboard] = useState(false);
-  const [showUserDashboard, setShowUserDashboard] = useState(false);
 
   const navigate = useNavigate();
 
@@ -40,14 +38,10 @@ const App = () => {
 
       if (userType === "Admin" && responseData === "true") {
         // Navigate to the admin dashboard
-        setShowLogin(false);
-        setShowAdminDashboard(true);
-        setError(null);
+        navigate(`/admin_dashboard/${email}`);
       } else if (userType === "User" && responseData === "true") {
         // Navigate to the user dashboard
-        setShowLogin(false);
-        setShowUserDashboard(true);
-        setError(null);
+        navigate(`/user_dashboard/${email}`);
       } else {
         setError("Error: Invalid email for user type!");
       }
@@ -60,18 +54,7 @@ const App = () => {
     }
   };
 
-  const handleLogout = () => {
-    console.log("logging out");
-    if (showAdminDashboard) {
-      setShowAdminDashboard(false);
-    }
-    if (showUserDashboard) {
-      setShowUserDashboard(false);
-    }
-    setShowLogin(true);
-    setEmail("");
-  };
-
+  
   const handleSignup = () => {
     try {
       navigate("/user_signup");
@@ -106,18 +89,6 @@ const App = () => {
             )}
           </div>
         </div>
-      )}
-      {showAdminDashboard === true && (
-        <AdminDashboard
-          email={email}
-          handleLogout={handleLogout}
-        ></AdminDashboard>
-      )}
-      {showUserDashboard === true && (
-        <UserDashboard
-          email={email}
-          handleLogout={handleLogout}
-        ></UserDashboard>
       )}
     </div>
   );

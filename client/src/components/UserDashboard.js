@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import Banner from './Banner';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-const UserDashboard = ({ email, handleLogout }) => {
+const UserDashboard = () => {
   const [userType, setUserType] = useState('');
 
   const [showMakeRequest, setShowMakeRequest] = useState(false);
   const [showDonateItems, setShowDonateItems] = useState(false);
   const [showViewInventory, setShowViewInventory] = useState(false);
+
+  const { email } = useParams();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    navigate("/");
+  };
 
   useEffect(() => {
     // Fetch user type from Flask backend using Axios
@@ -45,7 +54,7 @@ const UserDashboard = ({ email, handleLogout }) => {
   return (
     <div>
       <Banner />
-
+      <p>Email Value: {email}</p>
       <button onClick={handleMakeRequestClick}>Make Request</button>
       <button onClick={handleDonateItemsClick}>Donate Items</button>
       <button onClick={handleViewInventoryClick}>View Inventory</button>
