@@ -3,7 +3,6 @@ import Banner from './Banner';
 import axios from 'axios';
 
 const UserDashboard = ({ email, handleLogout }) => {
-  const [date, setDate] = useState('');
   const [userType, setUserType] = useState('');
 
   const [showMakeRequest, setShowMakeRequest] = useState(false);
@@ -14,7 +13,7 @@ const UserDashboard = ({ email, handleLogout }) => {
     // Fetch user type from Flask backend using Axios
     const fetchUserType = async () => {
       try {
-        const response = await axios.post('/getUsertype', { email }); // Replace '/getUsertype' with your actual endpoint
+        const response = await axios.post('/getUsertype', { email });
         setUserType(response.data.usertype);
       } catch (error) {
         console.error('Error fetching user type:', error);
@@ -24,9 +23,6 @@ const UserDashboard = ({ email, handleLogout }) => {
     fetchUserType();
   }, [email]); // Fetch user type when the component is loaded and email changes
 
-  const handleDateChange = (event) => {
-    setDate(event.target.value);
-  };
 
   const handleMakeRequestClick = () => {
     setShowMakeRequest(true);
@@ -49,6 +45,31 @@ const UserDashboard = ({ email, handleLogout }) => {
   return (
     <div>
       <Banner />
+
+      <button onClick={handleMakeRequestClick}>Make Request</button>
+      <button onClick={handleDonateItemsClick}>Donate Items</button>
+      <button onClick={handleViewInventoryClick}>View Inventory</button>
+
+      {showMakeRequest && <MakeRequest email={email} />}
+      {showDonateItems && <DonateItems email={email} />}
+      {showViewInventory && <ViewInventory />}
+      
+      <button onClick={handleLogout}>Logout</button>
+    </div>
+  );
+};
+
+const MakeRequest = ({ email }) => {
+  const [date, setDate] = useState('');
+
+  const handleDateChange = (event) => {
+    setDate(event.target.value);
+  };
+
+
+  return (
+    <div>
+      <h3>Make Request Component</h3>
       <div>
         <h2>Hamper Request</h2>
 
@@ -69,25 +90,6 @@ const UserDashboard = ({ email, handleLogout }) => {
         </p>
         <p label="low/missing"></p>
       </div>
-
-      <button onClick={handleMakeRequestClick}>Make Request</button>
-      <button onClick={handleDonateItemsClick}>Donate Items</button>
-      <button onClick={handleViewInventoryClick}>View Inventory</button>
-
-      {showMakeRequest && <MakeRequest email={email} />}
-      {showDonateItems && <DonateItems email={email} />}
-      {showViewInventory && <ViewInventory />}
-      
-      <button onClick={handleLogout}>Logout</button>
-    </div>
-  );
-};
-
-const MakeRequest = ({ email }) => {
-  return (
-    <div>
-      <h3>Make Request Component</h3>
-      {/* Add content for making a request */}
     </div>
   );
 };
