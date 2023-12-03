@@ -14,6 +14,7 @@ import postItemData
 import getSupplierData
 
 import getRequestData
+import postRequestData
 
 #--------------------------------------------------------------------
 
@@ -194,6 +195,7 @@ def admin_signUp():
         firstName = data.get('firstName')
         lastName = data.get('lastName')
         adminType = data.get('adminType')#volunteer or coordinator
+        shift = data.get("shift")
         
         volunteer_flag = 0
         coordinator_flag = 0
@@ -211,7 +213,7 @@ def admin_signUp():
             volunteer_flag = 0
             coordinator_flag = 1
 
-        post = postAdmin.addNewAdmin(email, firstName, lastName, volunteer_flag, coordinator_flag ) #add a donor
+        post = postAdmin.addNewAdmin(email, firstName, lastName, shift, volunteer_flag, coordinator_flag ) #add a donor
 
         if post == "Done!!": #if the entry was added successfully
             return jsonify({"status":"true"}) #if the user exists return true          
@@ -286,23 +288,15 @@ def addRequest():
         request_user = data.get('request_user')
         pickup_date = data.get('pickup_date') 
         request_date = data.get('request_date')
-
-
-        if itemType == "food":
-            food_flag = 0
-            toiletry_flag = 1
-        elif itemType == "toiletry":
-            food_flag = 1
-            toiletry_flag = 0
         
-        postItem = postItemData.postItemDatas()
+        postRequest = postRequestData.postRequestDatas()
         
-        post = postItem.updateItemQuantity(item_name, quantity, storage_type, brand, food_flag, toiletry_flag) #add a donor
+        post = postRequest.addNewRequest(request_id, request_admin, request_user, pickup_date, request_date) 
 
         if post == "Done!!": #if the entry was added successfully 
             return jsonify({"status":"true"}) #if the Item exists return true
-        else: #the Item is either a duplacate entry or some other error
-            return jsonify({"status":"false","reason":f"{item_name} might be a duplicate"}) #if the user exists return false
+        else: #the request_id is either a duplicate entry or some other error
+            return jsonify({"status":"false","reason":f"{request_id} might be a duplicate, or ether the user or admin does not exist"}) 
         
     except Exception as e:
         print('Error during login:', str(e))
