@@ -21,9 +21,16 @@ class getAdminDatas(object):
         self.cursor.close()
         return aData
     
-    def getAnAdmin_a_email(self, a_email):
+    # def getAnAdmin_a_email(self, a_email):
+    #     self.cursor = mysql.connection.cursor()
+    #     self.cursor.execute(f"""SELECT a_email FROM Admin WHERE a_email = '{a_email}'""")
+    #     aData = self.cursor.fetchall()
+    #     self.cursor.close()
+    #     return aData
+    
+    def getAnAdminInfo(self, a_email):
         self.cursor = mysql.connection.cursor()
-        self.cursor.execute(f"""SELECT a_email FROM Admin WHERE a_email = '{a_email}'""")
+        self.cursor.execute(f"""SELECT * FROM Admin WHERE a_email = '{a_email}'""")
         aData = self.cursor.fetchall()
         self.cursor.close()
         return aData

@@ -13,19 +13,9 @@ import postItemData
 
 import getSupplierData
 
-# Example API Route
+import getRequestData
 
-@app.route("/members")
-def members():
-    return {"members": ["Member 1", "Member 2"]}
-
-@app.route("/items")
-def items():
-    return {"items": {
-        "apple":[45,'fridge','jan 1'],
-        "orange":[3,'fridge','dec 20']
-    }}
-
+#--------------------------------------------------------------------
 
 @app.route("/Admin")
 def Admin():
@@ -41,19 +31,15 @@ def Admin_fname():
     response = jsonify({"User_fname":aData}) #dont put spaces on the in the key name hence the  "_"
     return response
 
-# @app.route("/addAdmin", methods=["POST"], strict_slashes=False)
-# def add_User():
-#     a_email = request.json['a_email']
-#     admin_fname = request.json['fname']
-#     admin_lname = request.json['lname']
-    
- 
-#     postAdmin = postAdminData.postAdminDatas()
-#     post = postAdmin.addNewAdmin(a_email, admin_fname, admin_lname)
-
-#     response = jsonify({a_email:[admin_fname, admin_lname], "status":post})
-#     return  response
-
+#gets a row of an admin
+@app.route("/Admin_Info", methods=["POST"])
+def Admin_Info():
+    data = request.get_json()
+    a_email = data.get('a_email')
+    adminData = getAdminData.getAdminDatas()
+    aData = adminData.getAnAdminInfo(a_email)
+    response = jsonify({"Info":aData}) #dont put spaces on the in the key name hence the  "_"
+    return response
 
 
 #--------------------------------------------------------------------
@@ -72,6 +58,36 @@ def User_fname():
     response = jsonify({"User_fname":uData}) #dont put spaces on the in the key name hence the  "_"
     return response
 
+
+#gets the row of a user
+@app.route("/User_Info", methods=["POST"])
+def User_Info():
+    data = request.get_json()
+    u_email = data.get('u_email')
+    userData = getUserData.getUserDatas()
+    uData = userData.getAUserInfo(u_email)
+    response = jsonify({"Info":uData}) #dont put spaces on the in the key name hence the  "_"
+    return response
+
+#--------------------------------------------------------------------
+
+@app.route("/Request")
+def Request():
+    requestData = getRequestData.getRequestDatas()
+    rData = requestData.getAlldata()
+    response = jsonify({"Request":rData}) #dont put spaces on the in the key name hence the  "_"
+    return response
+
+
+#gets the row of a request
+@app.route("/Request_Info", methods=["POST"])
+def Request_Info():
+    data = request.get_json()
+    request_id = data.get('request_id')
+    requestData = getRequestData.getRequestDatas()
+    rData = requestData.getASingleRequest(request_id)
+    response = jsonify({"Info":rData}) #dont put spaces on the in the key name hence the  "_"
+    return response
 
 #--------------------------------------------------------------------
 
@@ -260,6 +276,37 @@ def updateItemQuantity():
         return jsonify({'error': 'An unexpected error occurred.'})
 
 
+@app.route("/addRequest", methods = ['POST'])
+def addRequest():
+    try:
+        #admins are volunteers by default
+        data = request.get_json()
+        request_id = data.get('request_id') 
+        request_admin = data.get('request_admin')
+        request_user = data.get('request_user')
+        pickup_date = data.get('pickup_date') 
+        request_date = data.get('request_date')
+
+
+        if itemType == "food":
+            food_flag = 0
+            toiletry_flag = 1
+        elif itemType == "toiletry":
+            food_flag = 1
+            toiletry_flag = 0
+        
+        postItem = postItemData.postItemDatas()
+        
+        post = postItem.updateItemQuantity(item_name, quantity, storage_type, brand, food_flag, toiletry_flag) #add a donor
+
+        if post == "Done!!": #if the entry was added successfully 
+            return jsonify({"status":"true"}) #if the Item exists return true
+        else: #the Item is either a duplacate entry or some other error
+            return jsonify({"status":"false","reason":f"{item_name} might be a duplicate"}) #if the user exists return false
+        
+    except Exception as e:
+        print('Error during login:', str(e))
+        return jsonify({'error': 'An unexpected error occurred.'})
 
 
 

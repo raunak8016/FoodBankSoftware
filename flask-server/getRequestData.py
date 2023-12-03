@@ -1,0 +1,23 @@
+#Python Class for all request related queries
+#Each method will retrieve a different set of data
+
+from connections import mysql
+
+class getRequestDatas(object):
+    def __init__(self):
+        self.cursor = mysql.connection.cursor()
+        
+    
+    def getAlldata(self):
+        self.cursor = mysql.connection.cursor()
+        self.cursor.execute("SELECT * FROM Request")
+        rData = self.cursor.fetchall()
+        self.cursor.close()
+        return rData
+    
+    def getASingleRequest(self, request_id):
+        self.cursor = mysql.connection.cursor()
+        self.cursor.execute(f"""SELECT * FROM Request WHERE request_id = '{request_id}'""")
+        rData = self.cursor.fetchall()
+        self.cursor.close()
+        return rData
