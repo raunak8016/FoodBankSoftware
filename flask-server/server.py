@@ -1,11 +1,16 @@
 from flask import Flask,request,jsonify
 
 from connections import app
+
 import getUserData
+import postUserData
+
 import getAdminData
 import postAdminData
-import postUserData
-import getUserData
+
+import getItemData
+import postItemData
+
 import getSupplierData
 
 # Example API Route
@@ -36,18 +41,18 @@ def Admin_fname():
     response = jsonify({"User_fname":aData}) #dont put spaces on the in the key name hence the  "_"
     return response
 
-@app.route("/addAdmin", methods=["POST"], strict_slashes=False)
-def add_User():
-    a_email = request.json['a_email']
-    admin_fname = request.json['fname']
-    admin_lname = request.json['lname']
+# @app.route("/addAdmin", methods=["POST"], strict_slashes=False)
+# def add_User():
+#     a_email = request.json['a_email']
+#     admin_fname = request.json['fname']
+#     admin_lname = request.json['lname']
     
  
-    postAdmin = postAdminData.postAdminDatas()
-    post = postAdmin.addNewAdmin(a_email, admin_fname, admin_lname)
+#     postAdmin = postAdminData.postAdminDatas()
+#     post = postAdmin.addNewAdmin(a_email, admin_fname, admin_lname)
 
-    response = jsonify({a_email:[admin_fname, admin_lname], "status":post})
-    return  response
+#     response = jsonify({a_email:[admin_fname, admin_lname], "status":post})
+#     return  response
 
 
 
@@ -78,8 +83,26 @@ def Supplier():
     response = jsonify({"Supplier":sData})
     return response
 
-
 #--------------------------------------------------------------------
+
+
+@app.route("/Item")
+def Item():
+    itemData = getItemData.getItemDatas()
+    iData = itemData.getAlldata()
+    response = jsonify({"Item":iData})
+    return response
+
+@app.route("/Item_Quantities")
+def Item_Quantities():
+    itemData = getItemData.getItemDatas()
+    iData = itemData.getItemQuantities()
+    response = jsonify({"Item_Quantities":iData})
+    return response
+
+
+
+#--------------------------------------Post Routes------------------------------
 @app.route("/login", methods = ['POST'])
 def login():
     try:
@@ -115,15 +138,14 @@ def login():
 def signUp():
     try:
         data = request.get_json()
-        email = data.get('email') #get either a_email or u_email
+        email = data.get('email') #get  u_email
         firstName = data.get('firstName')
         lastName = data.get('lastName')
         userType = data.get('userType')
         address = data.get('address')
 
 
-        client_flag = 0
-        donor_flag = 0
+        
         postUser = postUserData.postUserDatas()
         userData = getUserData.getUserDatas()
 
@@ -142,7 +164,7 @@ def signUp():
 
         if post == "Done!!": #if the entry was added successfully
             personData = []
-            
+
             personData = userData.getAUser_u_email(email)
 
             if len(personData) == 1:        
@@ -159,7 +181,53 @@ def signUp():
         return jsonify({'error': 'An unexpected error occurred.'})
     
 
+@app.route("/admin_signUp", methods = ['POST'])
+def admin_signUp():
+    try:
+        #admins are volunteers by default
+        data = request.get_json()
+        email = data.get('email') #get either a_email or u_email
+        firstName = data.get('firstName')
+        lastName = data.get('lastName')
+        adminType = data.get('adminType')#volunteer or coordinator
+        
+
+        volunteer_flag = 0
+        coordinator_flag = 0
+        postAdmin = postAdminData.postAdminDatas()
+        adminData = getAdminData.getAdminDatas()
+
     
+        volunteer_flag = 0
+        coordinator_flag = 0
+
+        if adminType == "volunteer":
+            volunteer_flag = 1
+            coordinator_flag = 0
+              
+        elif adminType == "coordinator":
+            volunteer_flag = 0
+            coordinator_flag = 1
+
+        post = postAdmin.addNewAdmin(email, firstName, lastName, volunteer_flag, coordinator_flag ) #add a donor
+
+        if post == "Done!!": #if the entry was added successfully
+            personData = []
+            
+            personData = adminData.getAnAdmin_a_email(email)
+
+            if len(personData) == 1:        
+                return jsonify({"status":"true"}) #if the user exists return true
+            else:
+                return jsonify({"status":"false","reason":"admin not added to database"}) #if the user exists return false
+        else: #the email is either a duplacate entry or some other error
+            return jsonify({"status":"false","reason":"duplicate entry"}) #if the user exists return false
+        
+        
+
+    except Exception as e:
+        print('Error during login:', str(e))
+        return jsonify({'error': 'An unexpected error occurred.'})
 
 
 
