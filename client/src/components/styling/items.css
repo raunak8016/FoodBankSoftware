@@ -1,0 +1,18 @@
+/* Items.css */
+
+.items-table {
+    width: 100%;
+    border-spacing: 8px;
+    border-collapse: separate;
+  }
+  
+  .items-table th,
+  .items-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  .editable {
+    border: 2px solid #3498db; /* Set a different border color for editable cells */
+  }
+  

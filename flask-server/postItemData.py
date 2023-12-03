@@ -28,8 +28,7 @@ class postItemDatas(object):
             self.cursor = mysql.connection.cursor()
             # Use parameterized queries to avoid SQL injection
             self.cursor.execute(
-                "UPDATE Item SET quantity = '%s' WHERE item_name = '%s'",
-                (item_name, quantity)
+                "UPDATE Item SET quantity = %s WHERE item_name = %s", (quantity, item_name)
             )
             mysql.connection.commit()
             self.cursor.close()

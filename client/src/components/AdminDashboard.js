@@ -3,7 +3,8 @@ import Banner from './Banner';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
+import Items from './Items';
 
 const AdminDashboard = () => {
   // State to manage the visibility of different sections
@@ -63,10 +64,91 @@ const ClientDonationsSection = () => {
 };
 
 const AddAdminSection = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    firstName: '',
+    lastName: '',
+    adminType: 'volunteer',
+    shiftTime: '', // New field for shift time
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = () => {
+    axios.post('/admin_signUp', formData)
+      .then(response => {
+        // Handle the response from the server as needed
+        console.log(response.data);
+        
+
+        const success = response.data.status;
+
+        if (success === "true") {
+          alert("Add new admin successful!");
+        } else {
+          const reason = response.data.reason;
+          alert("Add admin failed. " + reason);
+          console.log("faliure reason:", reason);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert("Signup failed. Please try again.");
+      });
+  };
+
   return (
     <div>
       <h3>Add Admin Account Section</h3>
-      {/* Add content for adding admin accounts */}
+      <form>
+        <label>Email:</label>
+        <input
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+        />
+
+        <label>First Name:</label>
+        <input
+          type="text"
+          name="firstName"
+          value={formData.firstName}
+          onChange={handleChange}
+        />
+
+        <label>Last Name:</label>
+        <input
+          type="text"
+          name="lastName"
+          value={formData.lastName}
+          onChange={handleChange}
+        />
+
+        <label>Admin Type:</label>
+        <select name="adminType" value={formData.adminType} onChange={handleChange}>
+          <option value="volunteer">Volunteer</option>
+          <option value="coordinator">Coordinator</option>
+        </select>
+
+        <label>Shift Time:</label>
+        <textarea
+          name="shiftTime"
+          value={formData.shiftTime}
+          onChange={handleChange}
+          placeholder="Enter your weekly schedule (e.g., Mon-06:00-15:00, Tue-09:00-17:00)"
+        />
+
+        <button type="button" onClick={handleSubmit}>
+          Submit
+        </button>
+      </form>
     </div>
   );
 };
@@ -83,7 +165,7 @@ const FulfillOrdersSection = () => {
 const InventorySection = () => {
   return (
     <div>
-      <h3>Inventory Section</h3>
+      <Items/>
     </div>
   );
 };

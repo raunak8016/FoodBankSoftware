@@ -240,22 +240,25 @@ def addItem():
     try:
         #admins are volunteers by default
         data = request.get_json()
+        print(data)
         item_name = data.get('item_name') #get either a_email or u_email
         quantity = data.get('quantity')
         storage_type = data.get('storageType')
         brand = data.get('brand')
         itemType = data.get('itemType')
-
+        
+        food_flag = 0
+        toiletry_flag = 0
         if itemType == "food":
-            food_flag = 0
-            toiletry_flag = 1
-        elif itemType == "toiletry":
             food_flag = 1
             toiletry_flag = 0
+        elif itemType == "toiletry":
+            food_flag = 0
+            toiletry_flag = 1
         
         postItem = postItemData.postItemDatas()
         
-        post = postItem.updateItemQuantity(item_name, quantity, storage_type, brand, food_flag, toiletry_flag) #add a donor
+        post = postItem.addNewItem(item_name, quantity, storage_type, brand, food_flag, toiletry_flag) #add a donor
 
         if post == "Done!!": #if the entry was added successfully 
             return jsonify({"status":"true"}) #if the Item exists return true
@@ -273,7 +276,7 @@ def updateItemQuantity():
         data = request.get_json()
         item_name = data.get('item_name') 
         quantity = data.get('quantity')
-        
+        print(item_name, quantity)
         postItem = postItemData.postItemDatas()
         
         post = postItem.updateItemQuantity(item_name, quantity) #add a donor
