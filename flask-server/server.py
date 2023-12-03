@@ -144,13 +144,8 @@ def signUp():
         userType = data.get('userType')
         address = data.get('address')
 
-
-        
         postUser = postUserData.postUserDatas()
-        userData = getUserData.getUserDatas()
-
-    
-
+     
         if userType == "client":
             client_flag = 1
             donor_flag = 0
@@ -163,16 +158,9 @@ def signUp():
             post = postUser.addNewDonor(email, firstName, lastName, client_flag, donor_flag) #add a donor
 
         if post == "Done!!": #if the entry was added successfully
-            personData = []
-
-            personData = userData.getAUser_u_email(email)
-
-            if len(personData) == 1:        
-                return jsonify({"status":"true"}) #if the user exists return true
-            else:
-                return jsonify({"status":"false","reason":"user not added to database"}) #if the user exists return false
+            return jsonify({"status":"true"}) #if the user exists return true   
         else: #the email is either a duplacate entry or some other error
-            return jsonify({"status":"false","reason":"duplicate entry"}) #if the user exists return false
+            return jsonify({"status":"false","reason":"might be a duplicate entry"}) #if the user exists return false
         
         
 
@@ -191,13 +179,11 @@ def admin_signUp():
         lastName = data.get('lastName')
         adminType = data.get('adminType')#volunteer or coordinator
         
-
         volunteer_flag = 0
         coordinator_flag = 0
-        postAdmin = postAdminData.postAdminDatas()
-        adminData = getAdminData.getAdminDatas()
 
-    
+        postAdmin = postAdminData.postAdminDatas()
+        
         volunteer_flag = 0
         coordinator_flag = 0
 
@@ -212,23 +198,66 @@ def admin_signUp():
         post = postAdmin.addNewAdmin(email, firstName, lastName, volunteer_flag, coordinator_flag ) #add a donor
 
         if post == "Done!!": #if the entry was added successfully
-            personData = []
-            
-            personData = adminData.getAnAdmin_a_email(email)
-
-            if len(personData) == 1:        
-                return jsonify({"status":"true"}) #if the user exists return true
-            else:
-                return jsonify({"status":"false","reason":"admin not added to database"}) #if the user exists return false
+            return jsonify({"status":"true"}) #if the user exists return true          
         else: #the email is either a duplacate entry or some other error
-            return jsonify({"status":"false","reason":"duplicate entry"}) #if the user exists return false
+            return jsonify({"status":"false","reason":"might be a duplicate entry"}) #if the user exists return false
         
-        
-
     except Exception as e:
         print('Error during login:', str(e))
         return jsonify({'error': 'An unexpected error occurred.'})
 
+
+@app.route("/addItem", methods = ['POST'])
+def addItem():
+    try:
+        #admins are volunteers by default
+        data = request.get_json()
+        item_name = data.get('item_name') #get either a_email or u_email
+        quantity = data.get('quantity')
+        storage_type = data.get('storageType')
+        brand = data.get('brand')
+        itemType = data.get('itemType')
+
+        if itemType == "food":
+            food_flag = 0
+            toiletry_flag = 1
+        elif itemType == "toiletry":
+            food_flag = 1
+            toiletry_flag = 0
+        
+        postItem = postItemData.postItemDatas()
+        
+        post = postItem.updateItemQuantity(item_name, quantity, storage_type, brand, food_flag, toiletry_flag) #add a donor
+
+        if post == "Done!!": #if the entry was added successfully 
+            return jsonify({"status":"true"}) #if the Item exists return true
+        else: #the Item is either a duplacate entry or some other error
+            return jsonify({"status":"false","reason":f"{item_name} might be a duplicate"}) #if the user exists return false
+        
+    except Exception as e:
+        print('Error during login:', str(e))
+        return jsonify({'error': 'An unexpected error occurred.'})
+
+
+@app.route("/updateItemQuantity", methods = ['POST'])
+def updateItemQuantity():
+    try:
+        data = request.get_json()
+        item_name = data.get('item_name') 
+        quantity = data.get('quantity')
+        
+        postItem = postItemData.postItemDatas()
+        
+        post = postItem.updateItemQuantity(item_name, quantity) #add a donor
+
+        if post == "Done!!": #if the entry was added successfully 
+            return jsonify({"status":"true"}) #if the Item was updated  return true
+        else: #something went wrong with the update
+            return jsonify({"status":"false","reason":f"an error occured with updating {item_name}"}) #if the user exists return false
+        
+    except Exception as e:
+        print('Error during login:', str(e))
+        return jsonify({'error': 'An unexpected error occurred.'})
 
 
 

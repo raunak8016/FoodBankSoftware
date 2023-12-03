@@ -20,3 +20,10 @@ class getItemDatas(object):
         iData = self.cursor.fetchall()
         self.cursor.close()
         return iData
+    
+    def getAnItemName(self, item_name):
+        self.cursor = mysql.connection.cursor()
+        self.cursor.execute(f"""SELECT item_name FROM Item WHERE item_name = '{item_name}'""")
+        aData = self.cursor.fetchall()
+        self.cursor.close()
+        return aData
