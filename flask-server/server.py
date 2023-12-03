@@ -16,6 +16,9 @@ import getSupplierData
 import getRequestData
 import postRequestData
 
+import getOrderData
+import postOrderData
+
 #--------------------------------------------------------------------
 
 @app.route("/Admin")
@@ -117,7 +120,14 @@ def Item_Quantities():
     response = jsonify({"Item_Quantities":iData})
     return response
 
+#--------------------------------------------------------------------
 
+@app.route("/Order")
+def Order():
+    orderData = getOrderData.getOrderDatas()
+    aData = orderData.getAlldata()
+    response = jsonify({"Order":aData})
+    return response
 
 #--------------------------------------Post Routes------------------------------
 @app.route("/login", methods = ['POST'])
@@ -302,7 +312,29 @@ def addRequest():
         print('Error during login:', str(e))
         return jsonify({'error': 'An unexpected error occurred.'})
 
+@app.route("/addOrder", methods = ['POST'])
+def addOrder():
+    try:
+        #admins are volunteers by default
+        data = request.get_json()
+        order_no = data.get("order_no")
+        delivery_date = data.get('delivery_date') 
+        admin_email = data.get('admin_email')
+        supplier_id = data.get('supplier_id')
+       
+        
+        postOrder = postOrderData.postOrderDatas()
+        
+        post = postOrder.addNewOrder(order_no, delivery_date, admin_email, supplier_id) 
 
+        if post == "Done!!": #if the entry was added successfully 
+            return jsonify({"status":"true"}) #if the Item exists return true
+        else: #the request_id is either a duplicate entry or some other error
+            return jsonify({"status":"false","reason":f"{request_id} might be a duplicate, or ether the user or admin does not exist"}) 
+        
+    except Exception as e:
+        print('Error during login:', str(e))
+        return jsonify({'error': 'An unexpected error occurred.'})
 
 
 if __name__ == "__main__":
