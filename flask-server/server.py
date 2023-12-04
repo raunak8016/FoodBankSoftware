@@ -238,7 +238,6 @@ def admin_signUp():
 @app.route("/addItem", methods = ['POST'])
 def addItem():
     try:
-        #admins are volunteers by default
         data = request.get_json()
         print(data)
         item_name = data.get('item_name') #get either a_email or u_email
@@ -279,7 +278,7 @@ def updateItemQuantity():
         print(item_name, quantity)
         postItem = postItemData.postItemDatas()
         
-        post = postItem.updateItemQuantity(item_name, quantity) #add a donor
+        post = postItem.updateItemQuantity(item_name, quantity) 
 
         if post == "Done!!": #if the entry was added successfully 
             return jsonify({"status":"true"}) #if the Item was updated  return true
@@ -291,10 +290,29 @@ def updateItemQuantity():
         return jsonify({'error': 'An unexpected error occurred.'})
 
 
+@app.route("/deleteItem", methods = ['POST'])
+def deleteItem():
+    try:
+        data = request.get_json()
+        item_name = data.get('item_name') 
+        
+        postItem = postItemData.postItemDatas()
+        
+        post = postItem.deleteItem(item_name)
+
+        if post == "Done!!": #if the item was deleted successfully 
+            return jsonify({"status":"true"}) #if the Item was updated  return true
+        else: #something went wrong with the update
+            return jsonify({"status":"false","reason":f"an error occured with updating {item_name}"}) #if the user exists return false
+        
+    except Exception as e:
+        print('Error during login:', str(e))
+        return jsonify({'error': 'An unexpected error occurred.'})
+
 @app.route("/addRequest", methods = ['POST'])
 def addRequest():
     try:
-        #admins are volunteers by default
+        
         data = request.get_json()
         request_id = data.get('request_id') 
         request_admin = data.get('request_admin')
@@ -318,7 +336,7 @@ def addRequest():
 @app.route("/addOrder", methods = ['POST'])
 def addOrder():
     try:
-        #admins are volunteers by default
+       
         data = request.get_json()
         order_no = data.get("order_no")
         delivery_date = data.get('delivery_date') 

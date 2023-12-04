@@ -36,3 +36,18 @@ class postItemDatas(object):
         except Exception as e:
             print('Error in updateItemQuantity:', str(e))
             return "Failed to update Item quantities"
+        
+    def deleteItem(self, item_name):
+        try:
+            #DELETE FROM `foodbankdb`.`Item` WHERE (`item_name` = 'Ultra Soft Toilet Paper');
+            self.cursor = mysql.connection.cursor()
+            # Use parameterized queries to avoid SQL injection
+            self.cursor.execute(
+                "Delete FROM Item WHERE item_name = %s", (item_name)
+            )
+            mysql.connection.commit()
+            self.cursor.close()
+            return "Done!!"
+        except Exception as e:
+            print('Error in deleteItem:', str(e))
+            return "Failed to delete Item"
