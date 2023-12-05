@@ -346,7 +346,7 @@ def deleteRequest():
         if post == "Done!!": #if the item was deleted successfully 
             return jsonify({"status":"true"}) #if the Item was updated  return true
         else: #something went wrong with the update
-            return jsonify({"status":"false","reason":f"an error occured with updating {item_name}"}) #if the user exists return false
+            return jsonify({"status":"false","reason":f"an error occured with deleting {request_id}"}) #if the user exists return false
         
     except Exception as e:
         print('Error during login:', str(e))
@@ -370,7 +370,7 @@ def addOrder():
         if post == "Done!!": #if the entry was added successfully 
             return jsonify({"status":"true"}) #if the Item exists return true
         else: #the request_id is either a duplicate entry or some other error
-            return jsonify({"status":"false","reason":f"{request_id} might be a duplicate, or ether the user or admin does not exist"}) 
+            return jsonify({"status":"false","reason":f"{order_no} might be a duplicate, or ether the user or admin does not exist"}) 
         
     except Exception as e:
         print('Error during login:', str(e))
