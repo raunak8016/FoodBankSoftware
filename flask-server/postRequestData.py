@@ -22,3 +22,18 @@ class postRequestDatas(object):
         except Exception as e:
             print('Error in addNewRequest:', str(e))
             return "Failed to add request"
+        
+    def deleteRequest(self, request_id):
+        try:
+           
+            self.cursor = mysql.connection.cursor()
+            # Use parameterized queries to avoid SQL injection
+            self.cursor.execute(
+                "Delete FROM Request WHERE request_id = %s", (request_id)
+            )
+            mysql.connection.commit()
+            self.cursor.close()
+            return "Done!!"
+        except Exception as e:
+            print('Error in deleteRequest:', str(e))
+            return "Failed to delete request"

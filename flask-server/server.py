@@ -333,6 +333,25 @@ def addRequest():
         print('Error during login:', str(e))
         return jsonify({'error': 'An unexpected error occurred.'})
 
+@app.route("/deleteRequest", methods = ['POST'])
+def deleteRequest():
+    try:
+        data = request.get_json()
+        request_id = data.get('request_id') 
+        
+        postRequest = postRequestData.postRequestDatas()
+        
+        post = postRequest.deleteRequest(request_id)
+
+        if post == "Done!!": #if the item was deleted successfully 
+            return jsonify({"status":"true"}) #if the Item was updated  return true
+        else: #something went wrong with the update
+            return jsonify({"status":"false","reason":f"an error occured with updating {item_name}"}) #if the user exists return false
+        
+    except Exception as e:
+        print('Error during login:', str(e))
+        return jsonify({'error': 'An unexpected error occurred.'})
+    
 @app.route("/addOrder", methods = ['POST'])
 def addOrder():
     try:
