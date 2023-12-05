@@ -49,6 +49,7 @@ const Signup = () => {
 
       if (success === "true") {
         alert("Signup successful!");
+        navigate("/");
       } else {
         alert("Signup failed. Please try again.");
         const reason = responseData.reason;
