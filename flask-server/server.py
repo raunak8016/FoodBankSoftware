@@ -98,7 +98,7 @@ def Request_Info():
     return response
 #---------------------------------REQUEST CONTAINS-----------------------------------
 
-@app.route("/RequestContains", methods="[POST]")
+@app.route("/RequestContains", methods =["POST"])
 def RequestContains():
 
     data = request.get_json()
@@ -144,7 +144,7 @@ def Order():
 
 
 #------------------------------ORDER CONTAINS--------------------------------------
-@app.route("/OrderContains", methods="[POST]")
+@app.route("/OrderContains", methods =["POST"])
 def OrderContains():
 
     data = request.get_json()
@@ -156,7 +156,7 @@ def OrderContains():
     return response
 
 #------------------------------DONATION--------------------------------------
-@app.route("/getDonation", methods="[POST]")
+@app.route("/getDonation", methods =["POST"])
 def getDonation():
 
     data = request.get_json()
