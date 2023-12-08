@@ -78,7 +78,6 @@ const MakeRequest = ({ email }) => {
 
   return (
     <div>
-      <h3>Make Request Component</h3>
       <div>
         <h2>Hamper Request</h2>
 
@@ -114,10 +113,42 @@ const DonateItems = ({ email }) => {
 };
 
 const ViewInventory = () => {
+  const [itemData, setItemData] = useState([]);
+
+  useEffect(() => {
+    // Fetch data when the component mounts
+    axios.get('/Item')
+      .then(response => {
+        setItemData(response.data.Item);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  }, []);
+
   return (
     <div>
-      <h3>View Inventory Component</h3>
-      {/* Add content for viewing inventory */}
+      <h3>Inventory</h3>
+      <table className="items-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Storage Type</th>
+            <th>Brand</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          {itemData.map((item, index) => (
+            <tr key={index}>
+              <td>{item[0]}</td>
+              <td>{item[1]}</td>
+              <td>{item[2]}</td>
+              <td>{item[3]}</td>
+              <td>{item[4] ? 'food' : 'toiletry'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

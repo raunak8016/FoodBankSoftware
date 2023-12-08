@@ -7,7 +7,7 @@ These instructions were adapted from the following tutorial: https://www.youtube
 ## Backend
 
 ### On MacOS:
-(One time only) Create and setup virtual python environment:
+Create and setup virtual python environment:
 ```
 cd flask-server
 python3 -m venv venv
@@ -21,7 +21,7 @@ python3 server.py
 ```
 
 ### On Windows
-(One time only) Create and setup virtual python environment:
+Create and setup virtual python environment:
 ```
 cd flask-server
 python -m venv venv

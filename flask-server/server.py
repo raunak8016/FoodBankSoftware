@@ -206,6 +206,7 @@ def admin_signUp():
         lastName = data.get('lastName')
         adminType = data.get('adminType')#volunteer or coordinator
         shift = data.get("shift")
+        managerEmail = data.get("managerEmail")
         
         volunteer_flag = 0
         coordinator_flag = 0
@@ -223,12 +224,12 @@ def admin_signUp():
             volunteer_flag = 0
             coordinator_flag = 1
 
-        post = postAdmin.addNewAdmin(email, firstName, lastName, shift, volunteer_flag, coordinator_flag ) #add a donor
+        post = postAdmin.addNewAdmin(email, firstName, lastName, shift, volunteer_flag, coordinator_flag, managerEmail ) #add a donor
 
         if post == "Done!!": #if the entry was added successfully
             return jsonify({"status":"true"}) #if the user exists return true          
         else: #the email is either a duplacate entry or some other error
-            return jsonify({"status":"false","reason":"might be a duplicate entry"}) #if the user exists return false
+            return jsonify({"status":"false","reason":"might be a duplicate entry or manager email does not exist"}) #if the user exists return false
         
     except Exception as e:
         print('Error during login:', str(e))
@@ -303,7 +304,7 @@ def deleteItem():
         if post == "Done!!": #if the item was deleted successfully 
             return jsonify({"status":"true"}) #if the Item was updated  return true
         else: #something went wrong with the update
-            return jsonify({"status":"false","reason":f"an error occured with updating {item_name}"}) #if the user exists return false
+            return jsonify({"status":"false","reason":f"an error occured with deleting {item_name}"}) #if the user exists return false
         
     except Exception as e:
         print('Error during login:', str(e))

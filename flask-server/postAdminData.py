@@ -7,14 +7,14 @@ class postAdminDatas(object):
     def __init__(self):
         self.cursor = mysql.connection.cursor()
 
-    def addNewAdmin(self, a_email, fname, lname, shift, volunteer_flag, coordinator_flag):
+    def addNewAdmin(self, a_email, fname, lname, shift, volunteer_flag, coordinator_flag, manager_email):
         try:
             self.cursor = mysql.connection.cursor()
             # Use parameterized queries to avoid SQL injection
             self.cursor.execute(
-                "INSERT INTO Admin (a_email, fname, lname, shift, volunteer_flag, coordinator_flag) "
-                "VALUES (%s, %s, %s, %s, %s, %s)",
-                (a_email, fname, lname, shift, volunteer_flag, coordinator_flag)
+                "INSERT INTO Admin (a_email, fname, lname, shift, volunteer_flag, coordinator_flag, mgr_email) "
+                "VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                (a_email, fname, lname, shift, volunteer_flag, coordinator_flag, manager_email,)
             )
             mysql.connection.commit()
             self.cursor.close()

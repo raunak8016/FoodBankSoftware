@@ -69,12 +69,14 @@ const App = () => {
         <div>
           <Banner />
           <h1>Login/Signup Page</h1>
+          <p></p>
           <div>
             <label>
               User Type:
               <button onClick={handleToggle}>{userType}</button>
             </label>
           </div>
+          <p></p>
           <div>
             <label>
               Email:
@@ -82,6 +84,7 @@ const App = () => {
             </label>
             {error && <p style={{ color: "red" }}>{error}</p>}
           </div>
+          <p></p>
           <div>
             <button onClick={handleLogin}>Login</button>
             {userType === "User" && (

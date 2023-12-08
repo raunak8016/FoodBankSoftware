@@ -44,16 +44,20 @@ const Items = () => {
   
 
   const handleDelete = (index) => {
-    // Handle deletion logic here, e.g., show a confirmation dialog
     const updatedItems = [...itemData];
-    updatedItems.splice(index, 1); // Remove the item at the specified index
+    updatedItems.splice(index, 1);
     setItemData(updatedItems);
-    console.log(index);
-    // Send the updated data to the Flask server for deletion
-    // You'll need to implement this part based on your server's API
-    axios.post('/deleteItem', { index })
+    console.log(itemData[index][0]);
+    axios.post('/deleteItem', { item_name: itemData[index][0] })
       .then(response => {
-        console.log('Item deleted successfully');
+        const success = response.data.status;
+        if (success === "true") {
+          console.log("Add item successful!");
+        } else {
+          const reason = response.data.reason;
+          alert("Delete failed. " + reason);
+          console.log("faliure reason:", reason);
+        }
       })
       .catch(error => console.error('Error deleting item:', error));
   };

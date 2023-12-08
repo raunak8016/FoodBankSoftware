@@ -1,48 +1,98 @@
 import React from 'react';
 import Banner from './Banner';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Items from './Items';
 
 const AdminDashboard = () => {
-  // State to manage the visibility of different sections
-  const [showOrders, setShowOrders] = useState(false);
-  const [showClientDonations, setShowClientDonations] = useState(false);
-  const [showAddAdmin, setShowAddAdmin] = useState(false);
-  const [showFulfillOrders, setShowFulfillOrders] = useState(false);
-  const [showInventory, setShowInventory] = useState(false);
+  // Unified state for managing the visibility of different sections
+  const [showSection, setShowSection] = useState(null);
+  const [adminInfo, setAdminInfo] = useState(null);
 
   const { email } = useParams();
   const navigate = useNavigate();
-
 
   const handleLogout = () => {
     navigate("/");
   };
 
+  // Function to close all sections
+  const closeAllSections = () => {
+    setShowSection(null);
+  };
+
+  
+  useEffect(() => {
+    axios.post('/Admin_Info', { a_email: email })
+      .then(response => {
+        setAdminInfo(response.data.Info);
+      })
+      .catch(error => {
+        console.error('Error fetching admin information:', error);
+      });
+  }, [email]);
+
   return (
     <div>
       <Banner />
       <div>
-        <p>Email Value: {email}</p>
-        <h2>Admin Dashboard</h2>
-        <button onClick={() => setShowOrders(!showOrders)}>Order from Supplier</button>
-        <button onClick={() => setShowClientDonations(!showClientDonations)}>Add Client Donation</button>
-        <button onClick={() => setShowAddAdmin(!showAddAdmin)}>Add Admin Account</button>
-        <button onClick={() => setShowFulfillOrders(!showFulfillOrders)}>Fulfill/View Requests</button>
-        <button onClick={() => setShowInventory(!showInventory)}>View Inventory</button>
+        <p></p>
+        <AdminProfile email={email} />
+        <button onClick={() => setShowSection('orders')}>Order from Supplier</button>
+        <button onClick={() => setShowSection('clientDonations')}>Add Client Donation</button>
+        {adminInfo && adminInfo[0][4] === 1 && (
+          <button onClick={() => setShowSection('addAdmin')}>Add Admin Account</button>
+        )}
+        <button onClick={() => setShowSection('fulfillOrders')}>Fulfill/View Requests</button>
+        <button onClick={() => setShowSection('inventory')}>View Inventory</button>
         <button onClick={handleLogout}>Logout</button>
       </div>
-      {showOrders && <OrdersSection />}
-      {showClientDonations && <ClientDonationsSection />}
-      {showAddAdmin && <AddAdminSection />}
-      {showFulfillOrders && <FulfillOrdersSection />}
-      {showInventory && <InventorySection />}
+      {/* Render sections based on the showSection state */}
+      {showSection === 'orders' && <OrdersSection closeAllSections={closeAllSections} />}
+      {showSection === 'clientDonations' && <ClientDonationsSection closeAllSections={closeAllSections} />}
+      {showSection === 'addAdmin' && <AddAdminSection closeAllSections={closeAllSections} />}
+      {showSection === 'fulfillOrders' && <FulfillOrdersSection closeAllSections={closeAllSections} />}
+      {showSection === 'inventory' && <InventorySection closeAllSections={closeAllSections} />}
     </div>
   );
 };
+
+const AdminProfile = ({ email }) => {
+  const [adminInfo, setAdminInfo] = useState(null);
+
+  useEffect(() => {
+    axios.post('/Admin_Info', { a_email: email })
+      .then(response => {
+        setAdminInfo(response.data.Info);
+      })
+      .catch(error => {
+        console.error('Error fetching admin information:', error);
+      });
+  }, [email]);
+
+  return (
+    <div style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '20px' }}>
+      <h2>Admin Profile</h2>
+      {adminInfo ? (
+        <div>
+          <p>Email: {adminInfo[0][0]}</p>
+          <p>Name: {adminInfo[0][1]} {adminInfo[0][2]}</p>
+          <p>Shift: {adminInfo[0][3]}</p>
+          {adminInfo[0][4] === 1 && <p>Coordinator: Yes</p>}
+          {adminInfo[0][5] === 1 && <p>Volunteer: Yes</p>}
+          <p>Manager Email: {adminInfo[0][6]}</p>
+        </div>
+      ) : (
+        <p>Loading admin information...</p>
+      )}
+    </div>
+  );
+};
+
+
+
 
 // Example section components (you can replace these with your actual components)
 const OrdersSection = () => {
@@ -69,7 +119,8 @@ const AddAdminSection = () => {
     firstName: '',
     lastName: '',
     adminType: 'volunteer',
-    shiftTime: '', // New field for shift time
+    shiftTime: '',
+    managerEmail: ''
   });
 
   const handleChange = (e) => {
@@ -145,6 +196,13 @@ const AddAdminSection = () => {
           placeholder="Enter your weekly schedule (e.g., Mon-06:00-15:00, Tue-09:00-17:00)"
         />
 
+        <label>Manager Email:</label>
+        <input
+          name="managerEmail"
+          value={formData.managerEmail}
+          onChange={handleChange}
+        />
+
         <button type="button" onClick={handleSubmit}>
           Submit
         </button>
@@ -156,7 +214,7 @@ const AddAdminSection = () => {
 const FulfillOrdersSection = () => {
   return (
     <div>
-      <h3>Fulfill Orders Section</h3>
+      <h3>Fulfill Requests</h3>
       {/* Add content for fulfilling orders */}
     </div>
   );

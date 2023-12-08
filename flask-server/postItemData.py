@@ -43,7 +43,7 @@ class postItemDatas(object):
             self.cursor = mysql.connection.cursor()
             # Use parameterized queries to avoid SQL injection
             self.cursor.execute(
-                "Delete FROM Item WHERE item_name = %s", (item_name)
+                "DELETE FROM Item WHERE item_name = %s", (item_name,)
             )
             mysql.connection.commit()
             self.cursor.close()
