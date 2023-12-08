@@ -20,6 +20,7 @@ import getOrderData
 import postOrderData
 
 import getOrderContainsData
+
 import getRequestContainsData
 import postRequestContainsData
 
@@ -465,11 +466,6 @@ def addRequestContains():
     except Exception as e:
         print('Error during adding a item for a request:', str(e))
         return jsonify({'error': 'An unexpected error occurred.'})
-
-
-
-
-
 
 
 if __name__ == "__main__":
