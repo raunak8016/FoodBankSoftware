@@ -53,7 +53,6 @@ def Admin_Info():
     response = jsonify({"Info":aData}) #dont put spaces on the in the key name hence the  "_"
     return response
 
-
 #-------------------------------------USER-------------------------------
 
 @app.route("/User")
@@ -69,7 +68,6 @@ def User_fname():
     uData = userData.getAllUserFnames()
     response = jsonify({"User_fname":uData}) #dont put spaces on the in the key name hence the  "_"
     return response
-
 
 #gets the row of a user
 @app.route("/User_Info", methods=["POST"])
@@ -90,8 +88,6 @@ def Request():
     response = jsonify({"Request":rData}) #dont put spaces on the in the key name hence the  "_"
     return response
 
-
-#gets the row of a request
 @app.route("/Request_Info", methods=["POST"])
 def Request_Info():
     data = request.get_json()
@@ -115,7 +111,6 @@ def RequestContains():
 
 #-----------------------------------SUPPLIER---------------------------------
 
-
 @app.route("/Supplier")
 def Supplier():
     supplierData = getSupplierData.getSupplierDatas()
@@ -124,8 +119,6 @@ def Supplier():
     return response
 
 #----------------------------------ITEM----------------------------------
-
-
 @app.route("/Item")
 def Item():
     itemData = getItemData.getItemDatas()
@@ -359,7 +352,6 @@ def deleteItem():
 @app.route("/addRequest", methods = ['POST'])
 def addRequest():
     try:
-        
         data = request.get_json()
         request_id = data.get('request_id') 
         request_admin = data.get('request_admin')
