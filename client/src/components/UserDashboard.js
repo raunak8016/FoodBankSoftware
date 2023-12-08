@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 
 const UserDashboard = () => {
-  const [userType, setUserType] = useState('');
+  const [userInfo, setUserInfo] = useState('');
 
   const [showMakeRequest, setShowMakeRequest] = useState(false);
   const [showDonateItems, setShowDonateItems] = useState(false);
@@ -19,19 +19,15 @@ const UserDashboard = () => {
   };
 
   useEffect(() => {
-    // Fetch user type from Flask backend using Axios
-    const fetchUserType = async () => {
-      try {
-        const response = await axios.post('/getUsertype', { email });
-        setUserType(response.data.usertype);
-      } catch (error) {
-        console.error('Error fetching user type:', error);
-      }
-    };
-
-    fetchUserType();
-  }, [email]); // Fetch user type when the component is loaded and email changes
-
+    axios.post('/User_Info', { u_email: email })
+      .then(response => {
+        setUserInfo(response.data.Info);
+        console.log(response.data.Info);
+      })
+      .catch(error => {
+        console.error('Error fetching user information:', error);
+      });
+  }, [email]);
 
   const handleMakeRequestClick = () => {
     setShowMakeRequest(true);
@@ -54,9 +50,11 @@ const UserDashboard = () => {
   return (
     <div>
       <Banner />
-      <p>Email Value: {email}</p>
-      <button onClick={handleMakeRequestClick}>Make Request</button>
-      <button onClick={handleDonateItemsClick}>Donate Items</button>
+      <p></p>
+      <UserProfile email={email} />
+      {userInfo && userInfo[0][3] === 1 && (<button onClick={handleMakeRequestClick}>Make Request</button>)}
+      {userInfo && userInfo[0][7] === 1 && (<button onClick={handleDonateItemsClick}>View Past Donations</button>)}
+      
       <button onClick={handleViewInventoryClick}>View Inventory</button>
 
       {showMakeRequest && <MakeRequest email={email} />}
@@ -83,13 +81,6 @@ const MakeRequest = ({ email }) => {
 
         <p>Select your preferred pickup date for your pickup:</p>
         <input type="date" value={date} onChange={handleDateChange}></input>
-
-        <p>
-          Please keep in mind that being more than 15 minutes late will require you
-          to reschedule your pickup. <br /> If you do not reschedule, your hamper will be unpacked,
-          and you will be required to wait 30 days until your next request.
-        </p>
-
         <p>Please select which items you would like.</p>
 
         <p>
@@ -102,11 +93,49 @@ const MakeRequest = ({ email }) => {
   );
 };
 
+const UserProfile = ({ email }) => {
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    axios.post('/User_Info', { u_email: email })
+      .then(response => {
+        setUserInfo(response.data.Info);
+      })
+      .catch(error => {
+        console.error('Error fetching user information:', error);
+      });
+  }, [email]);
+
+
+  return (
+    <div style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '20px' }}>
+      <h2>User Profile</h2>
+      {userInfo ? (
+        <div>
+          <p>Email: {userInfo[0][0]}</p>
+          <p>Name: {userInfo[0][1]} {userInfo[0][2]}</p>
+          
+
+          {userInfo[0][3] === 1 && <p>Type: Client</p>}
+          {userInfo[0][7] === 1 && <p>Type: Donor</p>}
+          
+          <p>Address: {userInfo[0][4]}</p>
+          
+          {/* Display 'Yes' for verified email if the value is not null or '' */}
+          <p>Verified: {userInfo[0][6] !== null && userInfo[0][6] !== '' ? 'Yes' : 'No'}</p>
+        </div>
+      ) : (
+        <p>Loading user information...</p>
+      )}
+    </div>
+  );
+};
+
 
 const DonateItems = ({ email }) => {
   return (
     <div>
-      <h3>Donate Items Component</h3>
+      <h3>Past Donations</h3>
       {/* Add content for donating items */}
     </div>
   );

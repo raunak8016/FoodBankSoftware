@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import Banner from "./Banner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import AdminDashboard from "./AdminDashboard";
-import UserDashboard from "./UserDashboard";
+
 
 const App = () => {
   const [userType, setUserType] = useState("User");
