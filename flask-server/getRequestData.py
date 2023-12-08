@@ -15,9 +15,9 @@ class getRequestDatas(object):
         self.cursor.close()
         return rData
     
-    def getASingleRequest(self, request_id):
+    def getASingleRequest(self, request_user):
         self.cursor = mysql.connection.cursor()
-        self.cursor.execute(f"""SELECT * FROM Request WHERE request_id = '{request_id}'""")
+        self.cursor.execute(f"""SELECT * FROM Request WHERE request_user = '{request_user}'""")
         rData = self.cursor.fetchall()
         self.cursor.close()
         return rData

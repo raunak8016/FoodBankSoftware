@@ -19,7 +19,14 @@ import postRequestData
 import getOrderData
 import postOrderData
 
-#--------------------------------------------------------------------
+import getOrderContainsData
+import getRequestContainsData
+import postRequestContainsData
+
+import postDonationData
+import getDonationData
+
+#---------------------------------ADMIN-----------------------------------
 
 @app.route("/Admin")
 def Admin():
@@ -46,7 +53,7 @@ def Admin_Info():
     return response
 
 
-#--------------------------------------------------------------------
+#-------------------------------------USER-------------------------------
 
 @app.route("/User")
 def User():
@@ -73,7 +80,7 @@ def User_Info():
     response = jsonify({"Info":uData}) #dont put spaces on the in the key name hence the  "_"
     return response
 
-#--------------------------------------------------------------------
+#----------------------------------REQUEST----------------------------------
 
 @app.route("/Request")
 def Request():
@@ -87,13 +94,25 @@ def Request():
 @app.route("/Request_Info", methods=["POST"])
 def Request_Info():
     data = request.get_json()
-    request_id = data.get('request_id')
+    user_email = data.get('user_email')
     requestData = getRequestData.getRequestDatas()
-    rData = requestData.getASingleRequest(request_id)
+    rData = requestData.getASingleRequest(user_email)
     response = jsonify({"Info":rData}) #dont put spaces on the in the key name hence the  "_"
     return response
+#---------------------------------REQUEST CONTAINS-----------------------------------
 
-#--------------------------------------------------------------------
+@app.route("/RequestContains", methods="[POST]")
+def RequestContains():
+
+    data = request.get_json()
+    request_id = data.get('request_id') 
+
+    requestData = getRequestContainsData.getRequestContainsDatas()
+    rData = requestData.getAllItemsByRequestId(request_id)
+    response = jsonify({f"Request: {request_id}":rData})
+    return response
+
+#-----------------------------------SUPPLIER---------------------------------
 
 
 @app.route("/Supplier")
@@ -103,7 +122,7 @@ def Supplier():
     response = jsonify({"Supplier":sData})
     return response
 
-#--------------------------------------------------------------------
+#----------------------------------ITEM----------------------------------
 
 
 @app.route("/Item")
@@ -120,13 +139,38 @@ def Item_Quantities():
     response = jsonify({"Item_Quantities":iData})
     return response
 
-#--------------------------------------------------------------------
+#---------------------------------ORDER-----------------------------------
 
 @app.route("/Order")
 def Order():
     orderData = getOrderData.getOrderDatas()
     aData = orderData.getAlldata()
     response = jsonify({"Order":aData})
+    return response
+
+
+#------------------------------ORDER CONTAINS--------------------------------------
+@app.route("/OrderContains", methods="[POST]")
+def OrderContains():
+
+    data = request.get_json()
+    order_no = data.get('request_id') 
+
+    requestData = getOrderContainsData.getOrderContainsDatas()
+    oData = requestData.getAllItemsByOrderNo(order_no)
+    response = jsonify({f"Order: {order_no}":oData})
+    return response
+
+#------------------------------DONATION--------------------------------------
+@app.route("/getDonation", methods="[POST]")
+def getDonation():
+
+    data = request.get_json()
+    donor_email = data.get('donor_email') 
+
+    donationdData = getDonationData.getDonationDatas()
+    dData = donationdData.getItemsAndDateByDonorEmail(donor_email)
+    response = jsonify({f"Donations By: {donor_email}":dData})
     return response
 
 #--------------------------------------Post Routes------------------------------
@@ -310,6 +354,7 @@ def deleteItem():
         print('Error during login:', str(e))
         return jsonify({'error': 'An unexpected error occurred.'})
 
+
 @app.route("/addRequest", methods = ['POST'])
 def addRequest():
     try:
@@ -326,13 +371,14 @@ def addRequest():
         post = postRequest.addNewRequest(request_id, request_admin, request_user, pickup_date, request_date) 
 
         if post == "Done!!": #if the entry was added successfully 
-            return jsonify({"status":"true"}) #if the Item exists return true
+            return jsonify({"status":"true"}) #if the request was added return true
         else: #the request_id is either a duplicate entry or some other error
             return jsonify({"status":"false","reason":f"{request_id} might be a duplicate, or ether the user or admin does not exist"}) 
         
     except Exception as e:
         print('Error during login:', str(e))
         return jsonify({'error': 'An unexpected error occurred.'})
+
 
 @app.route("/deleteRequest", methods = ['POST'])
 def deleteRequest():
@@ -345,25 +391,24 @@ def deleteRequest():
         post = postRequest.deleteRequest(request_id)
 
         if post == "Done!!": #if the item was deleted successfully 
-            return jsonify({"status":"true"}) #if the Item was updated  return true
+            return jsonify({"status":"true"}) #if the request was deleted return true
         else: #something went wrong with the update
-            return jsonify({"status":"false","reason":f"an error occured with deleting {request_id}"}) #if the user exists return false
+            return jsonify({"status":"false","reason":f"an error occured with deleting {request_id}"}) 
         
     except Exception as e:
         print('Error during login:', str(e))
         return jsonify({'error': 'An unexpected error occurred.'})
     
+
 @app.route("/addOrder", methods = ['POST'])
 def addOrder():
     try:
-       
         data = request.get_json()
         order_no = data.get("order_no")
         delivery_date = data.get('delivery_date') 
         admin_email = data.get('admin_email')
         supplier_id = data.get('supplier_id')
-       
-        
+
         postOrder = postOrderData.postOrderDatas()
         
         post = postOrder.addNewOrder(order_no, delivery_date, admin_email, supplier_id) 
@@ -374,8 +419,57 @@ def addOrder():
             return jsonify({"status":"false","reason":f"{order_no} might be a duplicate, or ether the user or admin does not exist"}) 
         
     except Exception as e:
-        print('Error during login:', str(e))
+        print('Error during adding an order:', str(e))
         return jsonify({'error': 'An unexpected error occurred.'})
+
+
+@app.route("/addDonation", methods = ['POST'])
+def addDonation():
+    try: 
+        data = request.get_json()
+        donor_email = data.get("donor_email")
+        donation_date = data.get('donation_date') 
+        item_name = data.get('item_name')
+       
+        postDonation = postDonationData.postDonationDatas()
+        
+        post = postDonation.addNewDonation(donor_email, item_name, donation_date) 
+
+        if post == "Done!!": #if the entry was added successfully 
+            return jsonify({"status":"true"}) #if the Item exists return true
+        else: #the request_id is either a duplicate entry or some other error
+            return jsonify({"status":"false","reason":f"{donor_email} might not exist as a user"}) 
+        
+    except Exception as e:
+        print('Error during adding a donation:', str(e))
+        return jsonify({'error': 'An unexpected error occurred.'})
+
+
+
+@app.route("/addRequestContains", methods = ['POST'])
+def addRequestContains():
+    try:
+        data = request.get_json()
+        id_request = data.get("id_request")
+        request_item = data.get('request_item') 
+       
+        postRequestContains = postRequestContainsData.postRequestContainsDatas()
+        
+        post = postRequestContains.addNewRequestItem(id_request, request_item) 
+
+        if post == "Done!!": #if the entry was added successfully 
+            return jsonify({"status":"true"}) #if the request item was added return true
+        else: #the the item or request id to be added doesnt exist
+            return jsonify({"status":"false","reason":f"{request_item} or {id_request} might not exist"}) 
+        
+    except Exception as e:
+        print('Error during adding a item for a request:', str(e))
+        return jsonify({'error': 'An unexpected error occurred.'})
+
+
+
+
+
 
 
 if __name__ == "__main__":
