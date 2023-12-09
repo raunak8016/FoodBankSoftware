@@ -240,7 +240,7 @@ def signUp():
         
 
     except Exception as e:
-        print('Error during login:', str(e))
+        print('Error during signUp:', str(e))
         return jsonify({'error': 'An unexpected error occurred.'})
     
 
@@ -314,7 +314,7 @@ def addItem():
             return jsonify({"status":"false","reason":f"{item_name} might be a duplicate"}) #if the user exists return false
         
     except Exception as e:
-        print('Error during login:', str(e))
+        print('Error during addItem:', str(e))
         return jsonify({'error': 'An unexpected error occurred.'})
 
 
@@ -335,7 +335,7 @@ def updateItemQuantity():
             return jsonify({"status":"false","reason":f"an error occured with updating {item_name}"}) #if the user exists return false
         
     except Exception as e:
-        print('Error during login:', str(e))
+        print('Error during updateItemQuantity:', str(e))
         return jsonify({'error': 'An unexpected error occurred.'})
 
 
@@ -355,7 +355,7 @@ def deleteItem():
             return jsonify({"status":"false","reason":f"an error occured with deleting {item_name}"}) #if the user exists return false
         
     except Exception as e:
-        print('Error during login:', str(e))
+        print('Error during deleteItem:', str(e))
         return jsonify({'error': 'An unexpected error occurred.'})
 
 
@@ -379,7 +379,7 @@ def addRequest():
             return jsonify({"status":"false","reason":f"{request_id} might be a duplicate, or ether the user or admin does not exist"}) 
         
     except Exception as e:
-        print('Error during login:', str(e))
+        print('Error during addRequest:', str(e))
         return jsonify({'error': 'An unexpected error occurred.'})
 
 
@@ -389,17 +389,40 @@ def deleteRequest():
         data = request.get_json()
         request_id = data.get('request_id') 
         
+        
         postRequest = postRequestData.postRequestDatas()
         
         post = postRequest.deleteRequest(request_id)
 
         if post == "Done!!": #if the item was deleted successfully 
-            return jsonify({"status":"true"}) #if the request was deleted return true
+            return jsonify({"status":"true"}) #if the request was updated return true
         else: #something went wrong with the update
-            return jsonify({"status":"false","reason":f"an error occured with deleting {request_id}"}) 
+            return jsonify({"status":"false","reason":f"an error occured with deleting request {request_id}"}) 
         
     except Exception as e:
-        print('Error during login:', str(e))
+        print('Error during deleteRequest:', str(e))
+        return jsonify({'error': 'An unexpected error occurred.'})
+
+
+@app.route("/updateRequest", methods = ['POST'])
+def updateRequest():
+    try:
+        data = request.get_json()
+        request_id = data.get('request_id')
+        admin_email = data.get('admin_email') 
+        currrent_date = data.get('currrent_date')  
+        
+        postRequest = postRequestData.postRequestDatas()
+        
+        post = postRequest.updateRequest(request_id, admin_email, currrent_date)
+
+        if post == "Done!!": #if the request was updated successfully 
+            return jsonify({"status":"true"}) #if the request was deleted return true
+        else: #something went wrong with the update
+            return jsonify({"status":"false","reason":f"an error occured with updating request {request_id}"}) 
+        
+    except Exception as e:
+        print('Error during updateRequest:', str(e))
         return jsonify({'error': 'An unexpected error occurred.'})
     
 
@@ -422,7 +445,7 @@ def addOrder():
             return jsonify({"status":"false","reason":f"{order_no} might be a duplicate, or ether the user or admin does not exist"}) 
         
     except Exception as e:
-        print('Error during adding an order:', str(e))
+        print('Error during addOrder:', str(e))
         return jsonify({'error': 'An unexpected error occurred.'})
 
 
@@ -444,7 +467,7 @@ def addDonation():
             return jsonify({"status":"false","reason":f"{donor_email} might not exist as a user"}) 
         
     except Exception as e:
-        print('Error during adding a donation:', str(e))
+        print('Error during addDonation:', str(e))
         return jsonify({'error': 'An unexpected error occurred.'})
 
 
@@ -468,7 +491,7 @@ def addRequestContains():
             return jsonify({"status":"false","reason":f"{request_items} or {id_request} might not exist"}) 
         
     except Exception as e:
-        print('Error during adding a item for a request:', str(e))
+        print('Error during addRequestContains', str(e))
         return jsonify({'error': 'An unexpected error occurred.'})
 
 

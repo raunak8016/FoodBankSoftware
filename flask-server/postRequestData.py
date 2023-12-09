@@ -37,3 +37,18 @@ class postRequestDatas(object):
         except Exception as e:
             print('Error in deleteRequest:', str(e))
             return "Failed to delete request"
+        
+
+    def updateRequest(self, request_id, admin_email, currrent_date):
+        try:
+            self.cursor = mysql.connection.cursor()
+            # Use parameterized queries to avoid SQL injection
+            self.cursor.execute(
+                "UPDATE Request SET request_admin = %s, pickup_date = %s  WHERE request_id = %s", (admin_email, currrent_date, request_id)
+            )
+            mysql.connection.commit()
+            self.cursor.close()
+            return "Done!!"
+        except Exception as e:
+            print('Error in updateRequest:', str(e))
+            return "Failed to update Request "
