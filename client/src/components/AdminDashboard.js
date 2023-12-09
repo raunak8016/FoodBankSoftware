@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Items from './Items';
+import { Link } from 'react-router-dom';
 
 const AdminDashboard = () => {
   // Unified state for managing the visibility of different sections
@@ -212,10 +213,50 @@ const AddAdminSection = () => {
 };
 
 const FulfillOrdersSection = () => {
+  const [requestList, setRequestList] = useState([]);
+
+  useEffect(() => {
+    // Fetch data from Flask backend using Axios
+    const fetchRequestData = async () => {
+      try {
+        const response = await axios.get('/Request');
+        setRequestList(response.data.Request);
+      } catch (error) {
+        console.error('Error fetching request data:', error);
+      }
+    };
+
+    fetchRequestData();
+  }, []); // Fetch data when the component is loaded
+
   return (
     <div>
-      <h3>Fulfill Requests</h3>
-      {/* Add content for fulfilling orders */}
+      <h2>Request List</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Request ID</th>
+            <th>Request Admin</th>
+            <th>Request User</th>
+            <th>Pickup Date</th>
+            <th>Request Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {requestList.map((request) => (
+            <tr key={request[0]}>
+              <td>
+                {/* Link each request_id to another page */}
+                <Link to={`/request_contains/${request[0]}`}>{request[0]}</Link>
+              </td>
+              <td>{request[1] ? 'Yes' : 'No'}</td>
+              <td>{request[2]}</td>
+              <td>{request[3]}</td>
+              <td>{request[4]}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

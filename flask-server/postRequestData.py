@@ -12,7 +12,7 @@ class postRequestDatas(object):
             self.cursor = mysql.connection.cursor()
             # Use parameterized queries to avoid SQL injection
             self.cursor.execute(
-                "INSERT INTO Admin (request_id, request_admin, request_user, pickup_date, request_date) "
+                "INSERT INTO Request (request_id, request_admin, request_user, pickup_date, request_date) "
                 "VALUES (%s, %s, %s, %s, %s)",
                 (request_id, request_admin, request_user, pickup_date, request_date)
             )

@@ -27,6 +27,8 @@ import postRequestContainsData
 import postDonationData
 import getDonationData
 
+import uuid
+from datetime import datetime
 #---------------------------------ADMIN-----------------------------------
 
 @app.route("/Admin")
@@ -96,6 +98,12 @@ def Request_Info():
     rData = requestData.getASingleRequest(user_email)
     response = jsonify({"Info":rData}) #dont put spaces on the in the key name hence the  "_"
     return response
+
+@app.route("/generate_request_id", methods=["GET"])
+def generate_request_id():
+    request_id = str(uuid.uuid4().hex)[:10]
+
+    return jsonify({"request_id": request_id})
 #---------------------------------REQUEST CONTAINS-----------------------------------
 
 @app.route("/RequestContains", methods =["POST"])
@@ -103,9 +111,11 @@ def RequestContains():
 
     data = request.get_json()
     request_id = data.get('request_id') 
-
+    print(request_id)
     requestData = getRequestContainsData.getRequestContainsDatas()
     rData = requestData.getAllItemsByRequestId(request_id)
+    print(rData)
+
     response = jsonify({f"Request: {request_id}":rData})
     return response
 
@@ -357,8 +367,8 @@ def addRequest():
         request_admin = data.get('request_admin')
         request_user = data.get('request_user')
         pickup_date = data.get('pickup_date') 
-        request_date = data.get('request_date')
-        
+        request_date = datetime.now().strftime('%Y-%m-%d')
+        print(request_id, request_admin, request_user, pickup_date, request_date)
         postRequest = postRequestData.postRequestDatas()
         
         post = postRequest.addNewRequest(request_id, request_admin, request_user, pickup_date, request_date) 
@@ -444,16 +454,18 @@ def addRequestContains():
     try:
         data = request.get_json()
         id_request = data.get("id_request")
-        request_item = data.get('request_item') 
-       
+        request_items = data.get('request_item') 
+        print(request_items)
+        
         postRequestContains = postRequestContainsData.postRequestContainsDatas()
         
-        post = postRequestContains.addNewRequestItem(id_request, request_item) 
+        for i in request_items:
+            post = postRequestContains.addNewRequestItem(id_request, i) 
 
         if post == "Done!!": #if the entry was added successfully 
             return jsonify({"status":"true"}) #if the request item was added return true
         else: #the the item or request id to be added doesnt exist
-            return jsonify({"status":"false","reason":f"{request_item} or {id_request} might not exist"}) 
+            return jsonify({"status":"false","reason":f"{request_items} or {id_request} might not exist"}) 
         
     except Exception as e:
         print('Error during adding a item for a request:', str(e))

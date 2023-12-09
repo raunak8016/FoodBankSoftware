@@ -3,6 +3,8 @@ import Banner from './Banner';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
+import UserMakeRequest from './UserMakeRequest';
+import { Link } from 'react-router-dom';
 
 const UserDashboard = () => {
   const [userInfo, setUserInfo] = useState('');
@@ -52,7 +54,7 @@ const UserDashboard = () => {
       <Banner />
       <p></p>
       <UserProfile email={email} />
-      {userInfo && userInfo[0][3] === 1 && (<button onClick={handleMakeRequestClick}>Make Request</button>)}
+      {userInfo && userInfo[0][3] === 1 && (<button onClick={handleMakeRequestClick}>Make/View Request</button>)}
       {userInfo && userInfo[0][7] === 1 && (<button onClick={handleDonateItemsClick}>View Past Donations</button>)}
       
       <button onClick={handleViewInventoryClick}>View Inventory</button>
@@ -60,83 +62,163 @@ const UserDashboard = () => {
       {showMakeRequest && <MakeRequest email={email} />}
       {showDonateItems && <DonateItems email={email} />}
       {showViewInventory && <ViewInventory />}
-      
+      <p></p>
       <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };
 
 const MakeRequest = ({ email }) => {
-  const [date, setDate] = useState('');
+  const [requestInfo, setRequestInfo] = useState(null);
 
-  const handleDateChange = (event) => {
-    setDate(event.target.value);
+  useEffect(() => {
+    // Fetch request information when the component mounts
+    const fetchRequestInfo = async () => {
+      try {
+        console.log(`Getting request info for ${email}...`);
+        const response = await axios.post('/Request_Info', { user_email: email });
+        setRequestInfo(response.data.Info);
+        console.log(response.data.Info);
+      } catch (error) {
+        console.error('Error fetching request information:', error);
+      }
+    };
+
+    fetchRequestInfo();
+  }, [email]); // Fetch request information when the user email changes
+
+  const formatDateString = (dateString) => {
+    if (dateString) {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('en-US', options);
+    }
+    return ''; // Return an empty string if date is null or empty
   };
-
 
   return (
     <div>
-      <div>
-        <h2>Hamper Request</h2>
-
-        <p>Select your preferred pickup date for your pickup:</p>
-        <input type="date" value={date} onChange={handleDateChange}></input>
-        <p>Please select which items you would like.</p>
-
-        <p>
-          The following items are running low or missing, so be aware they might not be
-          included in your hamper:
-        </p>
-        <p label="low/missing"></p>
-      </div>
-    </div>
-  );
-};
-
-const UserProfile = ({ email }) => {
-  const [userInfo, setUserInfo] = useState(null);
-
-  useEffect(() => {
-    axios.post('/User_Info', { u_email: email })
-      .then(response => {
-        setUserInfo(response.data.Info);
-      })
-      .catch(error => {
-        console.error('Error fetching user information:', error);
-      });
-  }, [email]);
-
-
-  return (
-    <div style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '20px' }}>
-      <h2>User Profile</h2>
-      {userInfo ? (
-        <div>
-          <p>Email: {userInfo[0][0]}</p>
-          <p>Name: {userInfo[0][1]} {userInfo[0][2]}</p>
-          
-
-          {userInfo[0][3] === 1 && <p>Type: Client</p>}
-          {userInfo[0][7] === 1 && <p>Type: Donor</p>}
-          
-          <p>Address: {userInfo[0][4]}</p>
-          
-          {/* Display 'Yes' for verified email if the value is not null or '' */}
-          <p>Verified: {userInfo[0][6] !== null && userInfo[0][6] !== '' ? 'Yes' : 'No'}</p>
-        </div>
+      <h2>Hamper Request</h2>
+      <h3>Make Request:</h3>
+      {/* Assuming UserMakeRequest is your component for making requests */}
+      <UserMakeRequest email={email} />
+      <h3>Past Requests:</h3>
+      {requestInfo ? (
+        <table style={{ border: '1px solid #ccc', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr>
+              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Request ID</th>
+              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Request User</th>
+              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Ready Date</th>
+              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Request Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {requestInfo.map((request, index) => (
+              <tr key={index}>
+                <td style={{ border: '1px solid #ccc', padding: '8px' }}>
+                  <Link to={`/request-details/${request[0]}`} target="_blank">
+                    {request[0]}
+                  </Link>
+                </td>
+                <td style={{ border: '1px solid #ccc', padding: '8px' }}>{request[2]}</td>
+                <td style={{ border: '1px solid #ccc', padding: '8px' }}>
+                  {formatDateString(request[3])}
+                </td>
+                <td style={{ border: '1px solid #ccc', padding: '8px' }}>
+                  {formatDateString(request[4])}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       ) : (
-        <p>Loading user information...</p>
+        <p>Loading request information...</p>
       )}
     </div>
   );
 };
 
+  const UserProfile = ({ email }) => {
+    const [userInfo, setUserInfo] = useState(null);
+
+    useEffect(() => {
+      axios.post('/User_Info', { u_email: email })
+        .then(response => {
+          setUserInfo(response.data.Info);
+        })
+        .catch(error => {
+          console.error('Error fetching user information:', error);
+        });
+    }, [email]);
+
+
+    return (
+      <div style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '20px' }}>
+        <h2>User Profile</h2>
+        {userInfo ? (
+          <div>
+            <p>Email: {userInfo[0][0]}</p>
+            <p>Name: {userInfo[0][1]} {userInfo[0][2]}</p>
+            
+
+            {userInfo[0][3] === 1 && <p>Type: Client</p>}
+            {userInfo[0][7] === 1 && <p>Type: Donor</p>}
+            
+            <p>Address: {userInfo[0][4]}</p>
+            
+            {/* Display 'Yes' for verified email if the value is not null or '' */}
+            <p>Verified: {userInfo[0][6] !== null && userInfo[0][6] !== '' ? 'Yes' : 'No'}</p>
+          </div>
+        ) : (
+          <p>Loading user information...</p>
+        )}
+      </div>
+    );
+};
 
 const DonateItems = ({ email }) => {
+  const [donations, setDonations] = useState([]);
+
+  useEffect(() => {
+    // Fetch past donations when the component mounts
+    const fetchDonations = async () => {
+      try {
+        console.log(`Getting donations for ${email}...`);
+        const response = await axios.post('/getDonation', { donor_email: email });
+        const formattedDonations = response.data[`Donations By: ${email}`].map(donation => {
+          // Convert the date part without time
+          const dateWithoutTime = new Date(donation[1]).toISOString().split('T')[0];
+          return [donation[0], dateWithoutTime];
+        });
+        setDonations(formattedDonations);
+        console.log(formattedDonations);
+      } catch (error) {
+        console.error('Error fetching past donations:', error);
+      }
+    };
+
+    fetchDonations();
+  }, [email]); // Fetch past donations when the donor email changes
+
   return (
     <div>
-      <h3>Past Donations</h3>
-      {/* Add content for donating items */}
+      <h2>View Past Donations</h2>
+      <table style={{ border: '1px solid #ccc', borderCollapse: 'collapse' }}>
+        <thead>
+          <tr>
+            <th style={{ border: '1px solid #ccc', padding: '8px' }}>Item</th>
+            <th style={{ border: '1px solid #ccc', padding: '8px' }}>Donation Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {donations && donations.map((donation, index) => (
+            <tr key={index}>
+              <td style={{ border: '1px solid #ccc', padding: '8px' }}>{donation[0]}</td>
+              <td style={{ border: '1px solid #ccc', padding: '8px' }}>{donation[1]}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
