@@ -166,8 +166,7 @@ const MakeRequest = ({ email }) => {
             
             <p>Address: {userInfo[0][4]}</p>
             
-            {/* Display 'Yes' for verified email if the value is not null or '' */}
-            <p>Verified: {userInfo[0][6] !== null && userInfo[0][6] !== '' ? 'Yes' : 'No'}</p>
+            {/* <p>Verified: {userInfo[0][6] !== null && userInfo[0][6] !== '' ? 'Yes' : 'No'}</p> */}
           </div>
         ) : (
           <p>Loading user information...</p>
