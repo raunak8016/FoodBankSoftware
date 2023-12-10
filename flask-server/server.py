@@ -147,10 +147,11 @@ def Item_Quantities():
 
 #---------------------------------ORDER-----------------------------------
 
-@app.route("/Order")
+@app.route("/Order", methods=["POST"])
 def Order():
     orderData = getOrderData.getOrderDatas()
     aData = orderData.getAlldata()
+    print(aData)
     response = jsonify({"Order":aData})
     return response
 
@@ -464,29 +465,27 @@ def addOrder():
         delivery_date = data.get('delivery_date') 
         admin_email = data.get('admin_email')
         supplier_id = data.get('supplier_id')
+        items = data.get('items')
         print(order_no, delivery_date, admin_email, supplier_id)
         postOrder = postOrderData.postOrderDatas()
         
-        post = postOrder.addNewOrder(order_no, delivery_date, admin_email, supplier_id) 
+        post = postOrder.addNewOrder(order_no, delivery_date, admin_email, supplier_id)
+
+        for i in items:
+            InsertOrderContains(order_no, i)
 
         if post == "Done!!": #if the entry was added successfully 
             return jsonify({"status":"true"}) #if the Item exists return true
         else: #the request_id is either a duplicate entry or some other error
-            return jsonify({"status":"false","reason":f"{order_no} might be a duplicate, or ether the user or admin does not exist"}) 
+            return jsonify({"status":"false","reason":f"{order_no}, please check input values."}) 
         
     except Exception as e:
         print('Error during addOrder:', str(e))
         return jsonify({'error': 'An unexpected error occurred.'})
     
 
-@app.route("/OrderContains", methods = ['POST'])
-def OrderContains():
-    try:
-        data = request.get_json()
-        order_no = data.get('order_no') 
-        item_name = data.get('item_name')
-        
-      
+def InsertOrderContains(order_no, item_name):
+    try:    
         postRequest = postOrderContainsData.postOrderContainsDatas()
         
         post = postRequest.addNewOrderItem(order_no, item_name) 

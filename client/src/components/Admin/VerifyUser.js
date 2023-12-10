@@ -37,7 +37,7 @@ const VerifyUser = ({email}) => {
 
   return (
     <div>
-      <h2>Verify Admin</h2>
+      <h2>Enter User Email to verify their account or check if they are already verified.</h2>
       <label>
         User Email:
         <input type="text" value={userEmail} onChange={handleUserEmailChange} required />

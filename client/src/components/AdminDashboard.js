@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import VerifyUser from './Admin/VerifyUser';
 import ClientDonations from './Admin/ClientDonations';
 import OrderSupplier from './Admin/OrderSupplier';
+import OrdersTable from './Admin/OrdersTable';
 
 const AdminDashboard = () => {
   const [showSection, setShowSection] = useState(null);
@@ -102,6 +103,7 @@ const OrdersSection = ({email}) => {
     <div>
       <h3>Orders Section</h3>
       <OrderSupplier email={email}/>
+      <OrdersTable/>
     </div>
   );
 };

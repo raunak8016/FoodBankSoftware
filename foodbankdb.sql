@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.34, for macos13 (arm64)
+-- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
 --
--- Host: localhost    Database: foodbankdb
+-- Host: 127.0.0.1    Database: foodbankdb
 -- ------------------------------------------------------
--- Server version	8.2.0
+-- Server version	8.0.35
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,13 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `Admin`
+-- Table structure for table `admin`
 --
 
-DROP TABLE IF EXISTS `Admin`;
+DROP TABLE IF EXISTS `admin`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Admin` (
+CREATE TABLE `admin` (
   `a_email` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `fname` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `lname` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
@@ -33,55 +33,56 @@ CREATE TABLE `Admin` (
   PRIMARY KEY (`a_email`),
   UNIQUE KEY `a-email_UNIQUE` (`a_email`),
   KEY `mgr-email_idx` (`mgr_email`),
-  CONSTRAINT `mgr-email` FOREIGN KEY (`mgr_email`) REFERENCES `Admin` (`a_email`) ON DELETE SET NULL ON UPDATE CASCADE
+  CONSTRAINT `mgr-email` FOREIGN KEY (`mgr_email`) REFERENCES `admin` (`a_email`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Admin`
+-- Dumping data for table `admin`
 --
 
-LOCK TABLES `Admin` WRITE;
-/*!40000 ALTER TABLE `Admin` DISABLE KEYS */;
-INSERT INTO `Admin` VALUES ('BobGaines@gmail.com','Bob','Gaines','Mon-09:00-17:00,Tue-09:00-17:00',1,0,'TedBarnes@gmail.com'),('SallyWon@gmail.com','Sally','Won','Tues-08:00-18:00',0,1,'TedBarnes@gmail.com'),('TedBarnes@gmail.com','Ted','Barnes','Mon-09:00-17:00,Tue-09:00-17:00',1,0,NULL);
-/*!40000 ALTER TABLE `Admin` ENABLE KEYS */;
+LOCK TABLES `admin` WRITE;
+/*!40000 ALTER TABLE `admin` DISABLE KEYS */;
+INSERT INTO `admin` VALUES ('BobGaines@gmail.com','Bob','Gaines','Mon-09:00-17:00,Tue-09:00-17:00',1,0,'TedBarnes@gmail.com'),('SallyWon@gmail.com','Sally','Won','Tues-08:00-18:00',0,1,'TedBarnes@gmail.com'),('TedBarnes@gmail.com','Ted','Barnes','Mon-09:00-17:00,Tue-09:00-17:00',1,0,NULL);
+/*!40000 ALTER TABLE `admin` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `Donation`
+-- Table structure for table `donation`
 --
 
-DROP TABLE IF EXISTS `Donation`;
+DROP TABLE IF EXISTS `donation`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Donation` (
+CREATE TABLE `donation` (
   `donor_email` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `item` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `donation_date` date NOT NULL,
-  PRIMARY KEY (`donor_email`,`item`),
+  PRIMARY KEY (`donor_email`,`item`,`donation_date`),
   KEY `item_idx` (`item`),
-  CONSTRAINT `donor_email` FOREIGN KEY (`donor_email`) REFERENCES `User` (`u_email`) ON UPDATE CASCADE,
-  CONSTRAINT `item` FOREIGN KEY (`item`) REFERENCES `Item` (`item_name`) ON UPDATE CASCADE
+  CONSTRAINT `donor_email` FOREIGN KEY (`donor_email`) REFERENCES `user` (`u_email`) ON UPDATE CASCADE,
+  CONSTRAINT `item` FOREIGN KEY (`item`) REFERENCES `item` (`item_name`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Donation`
+-- Dumping data for table `donation`
 --
 
-LOCK TABLES `Donation` WRITE;
-/*!40000 ALTER TABLE `Donation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Donation` ENABLE KEYS */;
+LOCK TABLES `donation` WRITE;
+/*!40000 ALTER TABLE `donation` DISABLE KEYS */;
+INSERT INTO `donation` VALUES ('DonaldFrump@gmail.com','Dad Cookies','2023-12-01'),('DonaldFrump@gmail.com','Dad Cookies','2023-12-05'),('DonaldFrump@gmail.com','Ultra Comfort Toilet Paper','2023-12-01');
+/*!40000 ALTER TABLE `donation` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `Item`
+-- Table structure for table `item`
 --
 
-DROP TABLE IF EXISTS `Item`;
+DROP TABLE IF EXISTS `item`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Item` (
+CREATE TABLE `item` (
   `item_name` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `quantity` int NOT NULL DEFAULT '0',
   `storage_type` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
@@ -94,23 +95,23 @@ CREATE TABLE `Item` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Item`
+-- Dumping data for table `item`
 --
 
-LOCK TABLES `Item` WRITE;
-/*!40000 ALTER TABLE `Item` DISABLE KEYS */;
-INSERT INTO `Item` VALUES ('Dad Cookies',35,'Shelf','Mondelez',1,0),('Kellogs Corn Flakes',13,'Shelf','Kellogs',1,0),('Ultra Comfort Toilet Paper',2,'Shelf','Charmin',0,1),('Ultra Soft Toilet Paper',5,'Shelf','Charmin',0,1);
-/*!40000 ALTER TABLE `Item` ENABLE KEYS */;
+LOCK TABLES `item` WRITE;
+/*!40000 ALTER TABLE `item` DISABLE KEYS */;
+INSERT INTO `item` VALUES ('Dad Cookies',35,'Shelf','Mondelez',1,0),('Kellogs Corn Flakes',13,'Shelf','Kellogs',1,0),('Ultra Comfort Toilet Paper',2,'Shelf','Charmin',0,1),('Ultra Soft Toilet Paper',5,'Shelf','Charmin',0,1);
+/*!40000 ALTER TABLE `item` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `Order`
+-- Table structure for table `order`
 --
 
-DROP TABLE IF EXISTS `Order`;
+DROP TABLE IF EXISTS `order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Order` (
+CREATE TABLE `order` (
   `order_no` char(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `delivery_date` date DEFAULT NULL,
   `admin_email` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
@@ -119,112 +120,112 @@ CREATE TABLE `Order` (
   UNIQUE KEY `order_no_UNIQUE` (`order_no`),
   KEY `admin_email_idx` (`admin_email`),
   KEY `suppplier_id_idx` (`supplier_id`),
-  CONSTRAINT `admin_email` FOREIGN KEY (`admin_email`) REFERENCES `Admin` (`a_email`) ON UPDATE CASCADE,
-  CONSTRAINT `suppplier_id` FOREIGN KEY (`supplier_id`) REFERENCES `Supplier` (`supplier_id`) ON UPDATE CASCADE
+  CONSTRAINT `admin_email` FOREIGN KEY (`admin_email`) REFERENCES `admin` (`a_email`) ON UPDATE CASCADE,
+  CONSTRAINT `suppplier_id` FOREIGN KEY (`supplier_id`) REFERENCES `supplier` (`supplier_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Order`
+-- Dumping data for table `order`
 --
 
-LOCK TABLES `Order` WRITE;
-/*!40000 ALTER TABLE `Order` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Order` ENABLE KEYS */;
+LOCK TABLES `order` WRITE;
+/*!40000 ALTER TABLE `order` DISABLE KEYS */;
+INSERT INTO `order` VALUES ('1fa56aeae3','2023-12-05','SallyWon@gmail.com','0000000001');
+/*!40000 ALTER TABLE `order` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `Order_Contains`
+-- Table structure for table `order_contains`
 --
 
-DROP TABLE IF EXISTS `Order_Contains`;
+DROP TABLE IF EXISTS `order_contains`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Order_Contains` (
+CREATE TABLE `order_contains` (
   `order_no` char(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `item_name` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   PRIMARY KEY (`order_no`,`item_name`),
   KEY `item_name_idx` (`item_name`),
-  CONSTRAINT `item_name` FOREIGN KEY (`item_name`) REFERENCES `Item` (`item_name`) ON UPDATE CASCADE,
-  CONSTRAINT `order_no` FOREIGN KEY (`order_no`) REFERENCES `Order` (`order_no`) ON UPDATE CASCADE
+  CONSTRAINT `item_name` FOREIGN KEY (`item_name`) REFERENCES `item` (`item_name`) ON UPDATE CASCADE,
+  CONSTRAINT `order_no` FOREIGN KEY (`order_no`) REFERENCES `order` (`order_no`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Order_Contains`
+-- Dumping data for table `order_contains`
 --
 
-LOCK TABLES `Order_Contains` WRITE;
-/*!40000 ALTER TABLE `Order_Contains` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Order_Contains` ENABLE KEYS */;
+LOCK TABLES `order_contains` WRITE;
+/*!40000 ALTER TABLE `order_contains` DISABLE KEYS */;
+/*!40000 ALTER TABLE `order_contains` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `Request`
+-- Table structure for table `request`
 --
 
-DROP TABLE IF EXISTS `Request`;
+DROP TABLE IF EXISTS `request`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Request` (
+CREATE TABLE `request` (
   `request_id` char(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `request_admin` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci,
+  `request_admin` varchar(30) DEFAULT NULL,
   `request_user` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `pickup_date` date DEFAULT NULL,
   `request_date` date NOT NULL,
   PRIMARY KEY (`request_id`),
   KEY `request_admin_idx` (`request_admin`),
   KEY `request_user_idx` (`request_user`),
-  CONSTRAINT `request_admin` FOREIGN KEY (`request_admin`) REFERENCES `Admin` (`a_email`) ON UPDATE CASCADE,
-  CONSTRAINT `request_user` FOREIGN KEY (`request_user`) REFERENCES `User` (`u_email`) ON UPDATE CASCADE
+  CONSTRAINT `request_user` FOREIGN KEY (`request_user`) REFERENCES `user` (`u_email`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Request`
+-- Dumping data for table `request`
 --
 
-LOCK TABLES `Request` WRITE;
-/*!40000 ALTER TABLE `Request` DISABLE KEYS */;
-INSERT INTO `Request` VALUES ('0123456789','TedBarnes@gmail.com','JohnDoe@gmail.com',NULL,'2004-08-05');
-/*!40000 ALTER TABLE `Request` ENABLE KEYS */;
+LOCK TABLES `request` WRITE;
+/*!40000 ALTER TABLE `request` DISABLE KEYS */;
+INSERT INTO `request` VALUES ('0123456789','SallyWon@gmail.com','JohnDoe@gmail.com','2023-12-09','2004-08-05'),('0403a62174','SallyWon@gmail.com','JohnDoe@gmail.com','2023-12-09','2023-12-09'),('1ae3754f21','SallyWon@gmail.com','JohnDoe@gmail.com','2023-12-09','2023-12-09'),('1f85a43bc4','SallyWon@gmail.com','JohnDoe@gmail.com','2023-12-09','2023-12-09'),('378716c27c','SallyWon@gmail.com','JohnDoe@gmail.com','2023-12-09','2023-12-09'),('3d308e4750','SallyWon@gmail.com','JohnDoe@gmail.com','2023-12-09','2023-12-09'),('424fb8620e','SallyWon@gmail.com','JohnDoe@gmail.com','2023-12-09','2023-12-09'),('4fe8b1a3de','SallyWon@gmail.com','JohnDoe@gmail.com','2023-12-09','2023-12-09'),('54f3c4c256',NULL,'JohnDoe@gmail.com',NULL,'2023-12-09'),('6ade9db1f5',NULL,'JohnDoe@gmail.com',NULL,'2023-12-09'),('6bd774bd04',NULL,'JohnDoe@gmail.com',NULL,'2023-12-09'),('6bf4f64538',NULL,'JohnDoe@gmail.com',NULL,'2023-12-09'),('7b5fe53406',NULL,'JohnDoe@gmail.com',NULL,'2023-12-09'),('7d438f149b',NULL,'JohnDoe@gmail.com',NULL,'2023-12-09'),('8006a9a725',NULL,'JohnDoe@gmail.com',NULL,'2023-12-09'),('8c82cd1653',NULL,'JohnDoe@gmail.com',NULL,'2023-12-09'),('96419ea146',NULL,'JohnDoe@gmail.com',NULL,'2023-12-09'),('97ef5c0922',NULL,'JohnDoe@gmail.com',NULL,'2023-12-09'),('b38aae5310',NULL,'JohnDoe@gmail.com',NULL,'2023-12-09'),('c517c9113f',NULL,'JohnDoe@gmail.com',NULL,'2023-12-09'),('d53f662240',NULL,'JohnDoe@gmail.com',NULL,'2023-12-09'),('e0ef5b4eb0',NULL,'JohnDoe@gmail.com',NULL,'2023-12-09'),('e235de8231',NULL,'JohnDoe@gmail.com',NULL,'2023-12-09'),('ec6fe14d60',NULL,'JohnDoe@gmail.com',NULL,'2023-12-09'),('f76afb8142',NULL,'JohnDoe@gmail.com',NULL,'2023-12-09');
+/*!40000 ALTER TABLE `request` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `Request_Contains`
+-- Table structure for table `request_contains`
 --
 
-DROP TABLE IF EXISTS `Request_Contains`;
+DROP TABLE IF EXISTS `request_contains`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Request_Contains` (
+CREATE TABLE `request_contains` (
   `id_request` char(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `request_item` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   PRIMARY KEY (`id_request`,`request_item`),
   KEY `request_item_idx` (`request_item`),
-  CONSTRAINT `id_request` FOREIGN KEY (`id_request`) REFERENCES `Request` (`request_id`) ON UPDATE CASCADE,
-  CONSTRAINT `request_item` FOREIGN KEY (`request_item`) REFERENCES `Item` (`item_name`) ON UPDATE CASCADE
+  CONSTRAINT `id_request` FOREIGN KEY (`id_request`) REFERENCES `request` (`request_id`) ON UPDATE CASCADE,
+  CONSTRAINT `request_item` FOREIGN KEY (`request_item`) REFERENCES `item` (`item_name`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Request_Contains`
+-- Dumping data for table `request_contains`
 --
 
-LOCK TABLES `Request_Contains` WRITE;
-/*!40000 ALTER TABLE `Request_Contains` DISABLE KEYS */;
-INSERT INTO `Request_Contains` VALUES ('0123456789','Dad Cookies');
-/*!40000 ALTER TABLE `Request_Contains` ENABLE KEYS */;
+LOCK TABLES `request_contains` WRITE;
+/*!40000 ALTER TABLE `request_contains` DISABLE KEYS */;
+INSERT INTO `request_contains` VALUES ('0123456789','Dad Cookies'),('424fb8620e','Dad Cookies'),('1ae3754f21','Kellogs Corn Flakes'),('378716c27c','Kellogs Corn Flakes'),('424fb8620e','Kellogs Corn Flakes'),('6bd774bd04','Kellogs Corn Flakes'),('6bf4f64538','Kellogs Corn Flakes'),('8006a9a725','Kellogs Corn Flakes'),('8c82cd1653','Kellogs Corn Flakes'),('b38aae5310','Kellogs Corn Flakes'),('c517c9113f','Kellogs Corn Flakes'),('e235de8231','Kellogs Corn Flakes'),('ec6fe14d60','Kellogs Corn Flakes'),('f76afb8142','Kellogs Corn Flakes'),('1f85a43bc4','Ultra Comfort Toilet Paper'),('378716c27c','Ultra Comfort Toilet Paper'),('3d308e4750','Ultra Comfort Toilet Paper'),('424fb8620e','Ultra Comfort Toilet Paper'),('4fe8b1a3de','Ultra Comfort Toilet Paper'),('6bd774bd04','Ultra Comfort Toilet Paper'),('7b5fe53406','Ultra Comfort Toilet Paper'),('8006a9a725','Ultra Comfort Toilet Paper'),('8c82cd1653','Ultra Comfort Toilet Paper'),('b38aae5310','Ultra Comfort Toilet Paper'),('c517c9113f','Ultra Comfort Toilet Paper'),('d53f662240','Ultra Comfort Toilet Paper'),('ec6fe14d60','Ultra Comfort Toilet Paper'),('f76afb8142','Ultra Comfort Toilet Paper'),('424fb8620e','Ultra Soft Toilet Paper'),('b38aae5310','Ultra Soft Toilet Paper'),('e0ef5b4eb0','Ultra Soft Toilet Paper'),('f76afb8142','Ultra Soft Toilet Paper');
+/*!40000 ALTER TABLE `request_contains` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `Supplier`
+-- Table structure for table `supplier`
 --
 
-DROP TABLE IF EXISTS `Supplier`;
+DROP TABLE IF EXISTS `supplier`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Supplier` (
+CREATE TABLE `supplier` (
   `supplier_id` char(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `name` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `location` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
@@ -234,22 +235,23 @@ CREATE TABLE `Supplier` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Supplier`
+-- Dumping data for table `supplier`
 --
 
-LOCK TABLES `Supplier` WRITE;
-/*!40000 ALTER TABLE `Supplier` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Supplier` ENABLE KEYS */;
+LOCK TABLES `supplier` WRITE;
+/*!40000 ALTER TABLE `supplier` DISABLE KEYS */;
+INSERT INTO `supplier` VALUES ('0000000001','Walmart','Calgary'),('0000000002','Costco','Airdrie'),('0000000003','Sobeys','Okotoks');
+/*!40000 ALTER TABLE `supplier` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `User`
+-- Table structure for table `user`
 --
 
-DROP TABLE IF EXISTS `User`;
+DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `User` (
+CREATE TABLE `user` (
   `u_email` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `fname` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `lname` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
@@ -261,18 +263,18 @@ CREATE TABLE `User` (
   PRIMARY KEY (`u_email`),
   UNIQUE KEY `u_email_UNIQUE` (`u_email`),
   KEY `verify_email_idx` (`verify_email`),
-  CONSTRAINT `verify_email` FOREIGN KEY (`verify_email`) REFERENCES `Admin` (`a_email`) ON UPDATE CASCADE
+  CONSTRAINT `verify_email` FOREIGN KEY (`verify_email`) REFERENCES `admin` (`a_email`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `User`
+-- Dumping data for table `user`
 --
 
-LOCK TABLES `User` WRITE;
-/*!40000 ALTER TABLE `User` DISABLE KEYS */;
-INSERT INTO `User` VALUES ('BonnieClyde@gmail.com','Bonnie','Clyde',0,NULL,0,NULL,1),('ChiefKeef@gmail.com','Chief','Keef',0,NULL,0,NULL,1),('DonaldFrump@gmail.com','Donald','Frump',0,NULL,NULL,NULL,1),('JaneDoe@gmail.com','Jane','Doe',1,'12,Evergarden,Road',3,'TedBarnes@gmail.com',0),('JimJong@gmail.com','Jim','Jong',0,NULL,0,NULL,1),('JohnDoe@gmail.com','John','Doe',1,'12,Evergarden,Road',2,'BobGaines@gmail.com',0),('MattLow@gmail.com','Matt','Low',0,NULL,0,NULL,1),('TomJerry@gmail.com','Tom','Jerry',1,'15,Grandville,Crescent',0,NULL,0);
-/*!40000 ALTER TABLE `User` ENABLE KEYS */;
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES ('BonnieClyde@gmail.com','Bonnie','Clyde',0,NULL,0,NULL,1),('ChiefKeef@gmail.com','Chief','Keef',0,NULL,0,NULL,1),('DonaldFrump@gmail.com','Donald','Frump',0,NULL,NULL,'SallyWon@gmail.com',1),('JaneDoe@gmail.com','Jane','Doe',1,'12,Evergarden,Road',3,'TedBarnes@gmail.com',0),('JimJong@gmail.com','Jim','Jong',0,NULL,0,NULL,1),('JohnDoe@gmail.com','John','Doe',1,'12,Evergarden,Road',2,'SallyWon@gmail.com',0),('MattLow@gmail.com','Matt','Low',0,NULL,0,NULL,1),('TomJerry@gmail.com','Tom','Jerry',1,'15,Grandville,Crescent',0,NULL,0);
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -284,4 +286,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-08 14:56:13
+-- Dump completed on 2023-12-10  0:10:54
