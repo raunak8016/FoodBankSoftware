@@ -6,12 +6,13 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Items from './Items';
 import { Link } from 'react-router-dom';
+import VerifyUser from './Admin/VerifyUser';
+import ClientDonations from './Admin/ClientDonations';
+import OrderSupplier from './Admin/OrderSupplier';
 
 const AdminDashboard = () => {
-  // Unified state for managing the visibility of different sections
   const [showSection, setShowSection] = useState(null);
   const [adminInfo, setAdminInfo] = useState(null);
-
   const { email } = useParams();
   const navigate = useNavigate();
 
@@ -19,12 +20,10 @@ const AdminDashboard = () => {
     navigate("/");
   };
 
-  // Function to close all sections
   const closeAllSections = () => {
     setShowSection(null);
   };
 
-  
   useEffect(() => {
     axios.post('/Admin_Info', { a_email: email })
       .then(response => {
@@ -42,12 +41,13 @@ const AdminDashboard = () => {
         <p></p>
         <AdminProfile email={email} />
         <button onClick={() => setShowSection('orders')}>Order from Supplier</button>
-        <button onClick={() => setShowSection('clientDonations')}>Add Client Donation</button>
+        <button onClick={() => setShowSection('clientDonations')}>Add Client Donations</button>
         {adminInfo && adminInfo[0][4] === 1 && (
           <button onClick={() => setShowSection('addAdmin')}>Add Admin Account</button>
         )}
         <button onClick={() => setShowSection('fulfillOrders')}>Fulfill/View Requests</button>
-        <button onClick={() => setShowSection('inventory')}>View Inventory</button>
+        <button onClick={() => setShowSection('inventory')}>View/Edit Inventory</button>
+        <button onClick={() => setShowSection('verifyUser')}>Verify User</button>
         <button onClick={handleLogout}>Logout</button>
       </div>
       {/* Render sections based on the showSection state */}
@@ -56,6 +56,7 @@ const AdminDashboard = () => {
       {showSection === 'addAdmin' && <AddAdminSection closeAllSections={closeAllSections} />}
       {showSection === 'fulfillOrders' && <FulfillOrdersSection email={email} closeAllSections={closeAllSections} />}
       {showSection === 'inventory' && <InventorySection closeAllSections={closeAllSections} />}
+      {showSection === 'verifyUser' && <VerifyUserSection email={email} closeAllSections={closeAllSections} />}
     </div>
   );
 };
@@ -80,7 +81,7 @@ const AdminProfile = ({ email }) => {
         <div>
           <p>Email: {adminInfo[0][0]}</p>
           <p>Name: {adminInfo[0][1]} {adminInfo[0][2]}</p>
-          <p>Shift: {adminInfo[0][3]}</p>
+          <p>Shifts: {adminInfo[0][3]}</p>
           {adminInfo[0][4] === 1 && <p>Coordinator: Yes</p>}
           {adminInfo[0][5] === 1 && <p>Volunteer: Yes</p>}
           <p>Manager Email: {adminInfo[0][6]}</p>
@@ -100,7 +101,7 @@ const OrdersSection = () => {
   return (
     <div>
       <h3>Orders Section</h3>
-      {/* Add content for viewing orders */}
+      <OrderSupplier/>
     </div>
   );
 };
@@ -109,7 +110,7 @@ const ClientDonationsSection = () => {
   return (
     <div>
       <h3>Client Donations Section</h3>
-      {/* Add content for viewing client donations */}
+      <ClientDonations/>
     </div>
   );
 };
@@ -314,6 +315,14 @@ const InventorySection = () => {
   return (
     <div>
       <Items/>
+    </div>
+  );
+};
+
+const VerifyUserSection = ({email}) => {
+  return (
+    <div>
+      <VerifyUser email={email}/>
     </div>
   );
 };

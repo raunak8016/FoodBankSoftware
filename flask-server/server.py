@@ -289,15 +289,21 @@ def updateVerifyAdmin():
         data = request.get_json()
         user_email = data.get('user_email')
         admin_email = data.get('admin_email') 
+        print(user_email, admin_email)
+
         
-        postRequest = postUserData.postUserDatas()
-        
-        post = postRequest.updateUserVerifyAdmin(admin_email, user_email)
-        print(post)
-        if post == "Done!!": #if the verify email was updated successfully 
-            return jsonify({"status":"true"}) #if the verify email was updated return true
-        else: #something went wrong with the update
-            return jsonify({"status":"false","reason":f"an error occured with updating the verify admin for {user_email}"}) 
+        userData = getUserData.getUserDatas()
+        uData = userData.getAUserInfo(user_email)
+        if (uData[0][6]==None or uData[0][6]==''):
+            postRequest = postUserData.postUserDatas()
+            post = postRequest.updateUserVerifyAdmin(admin_email, user_email)
+            print(post)
+            if post == "Done!!": #if the verify email was updated successfully 
+                return jsonify({"status":"true"}) #if the verify email was updated return true
+            else: #something went wrong with the update
+                return jsonify({"status":"false","reason":f"an error occured with updating the verify admin for {user_email}"})
+        else:
+            return jsonify({"status":"already"})
         
     except Exception as e:
         print('Error during updateRequest:', str(e))

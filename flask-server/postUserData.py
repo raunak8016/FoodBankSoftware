@@ -45,7 +45,7 @@ class postUserDatas(object):
             self.cursor = mysql.connection.cursor()
             # Use parameterized queries to avoid SQL injection
             self.cursor.execute(
-                "UPDATE User SET verify_admin = %s WHERE u_email = %s", (verify_admin, u_email)
+                "UPDATE User SET verify_email = %s WHERE u_email = %s", (verify_admin, u_email)
             )
             mysql.connection.commit()
             self.cursor.close()

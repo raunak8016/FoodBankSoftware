@@ -12,7 +12,7 @@ class postDonationDatas(object):
             self.cursor = mysql.connection.cursor()
             # Use parameterized queries to avoid SQL injection
             self.cursor.execute(
-                "INSERT INTO Donation (donor_email, item_name, donation_date) "
+                "INSERT INTO Donation (donor_email, item, donation_date) "
                 "VALUES (%s, %s, %s)",
                 (donor_email, item_name, donation_date)
             )
