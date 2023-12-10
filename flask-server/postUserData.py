@@ -38,3 +38,18 @@ class postUserDatas(object):
         except Exception as e:
             print('Error in addNewDonor:', str(e))
             return "Failed to add donor"
+        
+
+    def updateUserVerifyAdmin(self, verify_admin, u_email):
+        try:
+            self.cursor = mysql.connection.cursor()
+            # Use parameterized queries to avoid SQL injection
+            self.cursor.execute(
+                "UPDATE User SET verify_admin = %s WHERE u_email = %s", (verify_admin, u_email)
+            )
+            mysql.connection.commit()
+            self.cursor.close()
+            return "Done!!"
+        except Exception as e:
+            print('Error in updateUserVerifyAdmin:', str(e))
+            return "Failed to update verify admin "
