@@ -121,10 +121,11 @@ def RequestContains():
 
 #-----------------------------------SUPPLIER---------------------------------
 
-@app.route("/Supplier")
+@app.route("/Supplier", methods=["POST"])
 def Supplier():
     supplierData = getSupplierData.getSupplierDatas()
     sData = supplierData.getAlldata()
+    print(sData)
     response = jsonify({"Supplier":sData})
     return response
 
@@ -158,7 +159,7 @@ def Order():
 def OrderContains():
 
     data = request.get_json()
-    order_no = data.get('request_id') 
+    order_no = data.get('order_id') 
 
     requestData = getOrderContainsData.getOrderContainsDatas()
     oData = requestData.getAllItemsByOrderNo(order_no)
@@ -458,11 +459,11 @@ def updateRequest():
 def addOrder():
     try:
         data = request.get_json()
-        order_no = data.get("order_no")
+        order_no = str(uuid.uuid4().hex)[:10]
         delivery_date = data.get('delivery_date') 
         admin_email = data.get('admin_email')
         supplier_id = data.get('supplier_id')
-
+        print(order_no, delivery_date, admin_email, supplier_id)
         postOrder = postOrderData.postOrderDatas()
         
         post = postOrder.addNewOrder(order_no, delivery_date, admin_email, supplier_id) 

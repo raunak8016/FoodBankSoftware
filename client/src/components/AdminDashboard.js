@@ -47,11 +47,11 @@ const AdminDashboard = () => {
         )}
         <button onClick={() => setShowSection('fulfillOrders')}>Fulfill/View Requests</button>
         <button onClick={() => setShowSection('inventory')}>View/Edit Inventory</button>
-        <button onClick={() => setShowSection('verifyUser')}>Verify User</button>
+        <button onClick={() => setShowSection('verifyUser')}>Verify/Check User</button>
         <button onClick={handleLogout}>Logout</button>
       </div>
       {/* Render sections based on the showSection state */}
-      {showSection === 'orders' && <OrdersSection closeAllSections={closeAllSections} />}
+      {showSection === 'orders' && <OrdersSection email={email} closeAllSections={closeAllSections} />}
       {showSection === 'clientDonations' && <ClientDonationsSection closeAllSections={closeAllSections} />}
       {showSection === 'addAdmin' && <AddAdminSection closeAllSections={closeAllSections} />}
       {showSection === 'fulfillOrders' && <FulfillOrdersSection email={email} closeAllSections={closeAllSections} />}
@@ -97,11 +97,11 @@ const AdminProfile = ({ email }) => {
 
 
 // Example section components (you can replace these with your actual components)
-const OrdersSection = () => {
+const OrdersSection = ({email}) => {
   return (
     <div>
       <h3>Orders Section</h3>
-      <OrderSupplier/>
+      <OrderSupplier email={email}/>
     </div>
   );
 };

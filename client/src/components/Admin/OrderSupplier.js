@@ -1,36 +1,83 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const VerifyUser = ({ onSubmit }) => {
-  const [message, setMessage] = useState('');
+const OrderSupplier = ({ email }) => {
+    const [deliveryDate, setDeliveryDate] = useState('');
+    const [supplierId, setSupplierId] = useState('');
+    const [suppliers, setSuppliers] = useState([]);
+    const [status, setStatus] = useState(null);
+  
+    useEffect(() => {
+      const fetchSuppliers = async () => {
+        try {
+          const response = await axios.post('/Supplier');
+          setSuppliers(response.data.Supplier || []);
+        } catch (error) {
+          console.error('Error fetching suppliers:', error);
+        }
+      };
+  
+      fetchSuppliers();
+    }, []);
+  
+    const handleDeliveryDateChange = (e) => {
+      setDeliveryDate(e.target.value);
+    };
 
-  const handleInputChange = (event) => {
-    setMessage(event.target.value);
+  
+    const handleSupplierChange = (e) => {
+      setSupplierId(e.target.value);
+    };
+  
+    const handleAddOrder = async () => {
+      try {
+        const response = await axios.post('/addOrder', {
+          delivery_date: deliveryDate,
+          admin_email: email,
+          supplier_id: supplierId,
+        });
+  
+        const { status, reason } = response.data;
+  
+        if (status === 'true') {
+          // Order added successfully
+          setStatus('Order added successfully!');
+        } else {
+          // Error adding order
+          setStatus(`Failed to add order: ${reason}`);
+        }
+      } catch (error) {
+        console.error('Error adding order:', error);
+        setStatus('An unexpected error occurred.');
+      }
+    };
+  
+    return (
+      <div>
+        <h4>Add Order</h4>
+        <label>
+          Delivery Date:
+          <input type="date" value={deliveryDate} onChange={handleDeliveryDateChange} required />
+        </label>
+        <p></p>
+        <br />
+        <label>
+          Supplier:
+          <select value={supplierId} onChange={handleSupplierChange} required>
+            <option value="" disabled>Select a supplier</option>
+            {suppliers.map((supplier) => (
+              <option key={supplier[0]} value={supplier[0]}>
+                {`${supplier[1]}, id=${supplier[0]}`}
+              </option>
+            ))}
+          </select>
+        </label>
+        <br />
+        <p></p>
+        <button onClick={handleAddOrder}>Add Order</button>
+        {status && <p>{status}</p>}
+      </div>
+    );
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Call the onSubmit prop with the current message
-    onSubmit(message);
-    // Clear the input after submitting
-    setMessage('');
-  };
-
-  return (
-    <div style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '8px', maxWidth: '300px' }}>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={message}
-          onChange={handleInputChange}
-          placeholder="Type your message..."
-          style={{ width: '100%', padding: '8px', borderRadius: '4px', marginBottom: '8px' }}
-        />
-        <button type="submit" style={{ background: '#4CAF50', color: 'white', padding: '8px', borderRadius: '4px', cursor: 'pointer' }}>
-          Submit
-        </button>
-      </form>
-    </div>
-  );
-};
-
-export default VerifyUser;
+export default OrderSupplier;
