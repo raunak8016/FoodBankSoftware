@@ -54,7 +54,7 @@ const AdminDashboard = () => {
       {showSection === 'orders' && <OrdersSection closeAllSections={closeAllSections} />}
       {showSection === 'clientDonations' && <ClientDonationsSection closeAllSections={closeAllSections} />}
       {showSection === 'addAdmin' && <AddAdminSection closeAllSections={closeAllSections} />}
-      {showSection === 'fulfillOrders' && <FulfillOrdersSection closeAllSections={closeAllSections} />}
+      {showSection === 'fulfillOrders' && <FulfillOrdersSection email={email} closeAllSections={closeAllSections} />}
       {showSection === 'inventory' && <InventorySection closeAllSections={closeAllSections} />}
     </div>
   );
@@ -212,54 +212,103 @@ const AddAdminSection = () => {
   );
 };
 
-const FulfillOrdersSection = () => {
-  const [requestList, setRequestList] = useState([]);
+const FulfillOrdersSection = ({email}) => {
+  const [requestInfo, setRequestInfo] = useState([]);
+
+  const fetchRequestInfo = async () => {
+    try {
+      console.log(`Getting request info...`);
+      const response = await axios.post('/Request');
+      setRequestInfo(response.data.Request || []); // Ensure that response.data.Request is an array
+    } catch (error) {
+      console.error('Error fetching request information:', error);
+    }
+  };
 
   useEffect(() => {
-    // Fetch data from Flask backend using Axios
-    const fetchRequestData = async () => {
-      try {
-        const response = await axios.get('/Request');
-        setRequestList(response.data.Request);
-      } catch (error) {
-        console.error('Error fetching request data:', error);
-      }
-    };
+    // Fetch request information when the component mounts
+    fetchRequestInfo();
+  }, []);
 
-    fetchRequestData();
-  }, []); // Fetch data when the component is loaded
+  const formatDateString = (dateString) => {
+    if (dateString) {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('en-US', options);
+    }
+    return ''; // Return an empty string if date is null or empty
+  };
+
+  const handleFulfillClick = async (requestId) => {
+    try {
+      const response = await axios.post('/updateRequest', {
+        request_id: requestId,
+        admin_email: email,
+      });
+
+      const updateStatus = response.data.status;
+
+      if (updateStatus === 'true') {
+        console.log(`Request ${requestId} fulfilled successfully!`);
+        // Refresh request information after fulfillment
+        fetchRequestInfo();
+      } else {
+        console.error(`Failed to fulfill request ${requestId}.`);
+        alert('failed to fulfill request')
+      }
+    } catch (error) {
+      console.error('Error fulfilling request:', error);
+    }
+  };
 
   return (
     <div>
       <h2>Request List</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Request ID</th>
-            <th>Request Admin</th>
-            <th>Request User</th>
-            <th>Pickup Date</th>
-            <th>Request Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {requestList.map((request) => (
-            <tr key={request[0]}>
-              <td>
-                {/* Link each request_id to another page */}
-                <Link to={`/request_contains/${request[0]}`}>{request[0]}</Link>
-              </td>
-              <td>{request[1] ? 'Yes' : 'No'}</td>
-              <td>{request[2]}</td>
-              <td>{request[3]}</td>
-              <td>{request[4]}</td>
+      {requestInfo.length > 0 ? (
+        <table style={{ border: '1px solid #ccc', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr>
+              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Request ID</th>
+              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Request Admin</th>
+              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Request User</th>
+              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Ready Date</th>
+              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Request Date</th>
+              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {requestInfo.map((request, index) => (
+              <tr key={index}>
+                <td style={{ border: '1px solid #ccc', padding: '8px' }}>
+                  <Link to={`/request-details/${request[0]}`} target="_blank">
+                    {request[0]}
+                  </Link>
+                </td>
+                <td style={{ border: '1px solid #ccc', padding: '8px' }}>{request[1]}</td>
+                <td style={{ border: '1px solid #ccc', padding: '8px' }}>{request[2]}</td>
+                <td style={{ border: '1px solid #ccc', padding: '8px' }}>
+                  {formatDateString(request[3])}
+                </td>
+                <td style={{ border: '1px solid #ccc', padding: '8px' }}>
+                  {formatDateString(request[4])}
+                </td>
+                <td style={{ border: '1px solid #ccc', padding: '8px' }}>
+                  {request[3] === null || request[3] === '' ? (
+                    <button onClick={() => handleFulfillClick(request[0])}>Fulfill</button>
+                  ) : (
+                    'Already Fulfilled'
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p>Loading request information...</p>
+      )}
     </div>
   );
 };
+
 
 const InventorySection = () => {
   return (

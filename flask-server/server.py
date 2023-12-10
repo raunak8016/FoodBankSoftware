@@ -83,7 +83,7 @@ def User_Info():
 
 #----------------------------------REQUEST----------------------------------
 
-@app.route("/Request")
+@app.route("/Request", methods=["POST"])
 def Request():
     requestData = getRequestData.getRequestDatas()
     rData = requestData.getAlldata()
@@ -410,12 +410,12 @@ def updateRequest():
         data = request.get_json()
         request_id = data.get('request_id')
         admin_email = data.get('admin_email') 
-        currrent_date = data.get('currrent_date')  
+        currrent_date = datetime.now().strftime('%Y-%m-%d')  
         
         postRequest = postRequestData.postRequestDatas()
         
         post = postRequest.updateRequest(request_id, admin_email, currrent_date)
-
+        print(post)
         if post == "Done!!": #if the request was updated successfully 
             return jsonify({"status":"true"}) #if the request was deleted return true
         else: #something went wrong with the update
