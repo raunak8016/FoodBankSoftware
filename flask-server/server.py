@@ -20,6 +20,7 @@ import getOrderData
 import postOrderData
 
 import getOrderContainsData
+import postOrderContainsData
 
 import getRequestContainsData
 import postRequestContainsData
@@ -475,6 +476,28 @@ def addOrder():
         
     except Exception as e:
         print('Error during addOrder:', str(e))
+        return jsonify({'error': 'An unexpected error occurred.'})
+    
+
+@app.route("/OrderContains", methods = ['POST'])
+def OrderContains():
+    try:
+        data = request.get_json()
+        order_no = data.get('order_no') 
+        item_name = data.get('item_name')
+        
+      
+        postRequest = postOrderContainsData.postOrderContainsDatas()
+        
+        post = postRequest.addNewOrderItem(order_no, item_name) 
+
+        if post == "Done!!": #if the entry was added successfully 
+            return jsonify({"status":"true"}) #if the item was added return true
+        else: #the request_id is either a duplicate entry or some other error
+            return jsonify({"status":"false","reason":f"either the order: {order_no} or item:{item_name} does not exist"}) 
+        
+    except Exception as e:
+        print('Error during addRequest:', str(e))
         return jsonify({'error': 'An unexpected error occurred.'})
 
 
