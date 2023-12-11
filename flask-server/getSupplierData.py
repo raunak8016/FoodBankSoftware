@@ -1,4 +1,4 @@
-#Python Class for all user related queries
+#Python Class for all Supplier related queries
 #Each method will retrieve a different set of data
 
 from connections import mysql

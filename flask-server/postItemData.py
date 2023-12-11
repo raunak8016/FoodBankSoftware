@@ -39,11 +39,10 @@ class postItemDatas(object):
         
     def deleteItem(self, item_name):
         try:
-            #DELETE FROM `foodbankdb`.`Item` WHERE (`item_name` = 'Ultra Soft Toilet Paper');
             self.cursor = mysql.connection.cursor()
             # Use parameterized queries to avoid SQL injection
             self.cursor.execute(
-                "DELETE FROM Item WHERE item_name = %s", (item_name,)
+                "DELETE FROM Item WHERE item_name = %s", (item_name)
             )
             mysql.connection.commit()
             self.cursor.close()

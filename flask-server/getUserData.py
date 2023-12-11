@@ -6,7 +6,6 @@ from connections import mysql
 class getUserDatas(object):
     def __init__(self):
         self.cursor = mysql.connection.cursor()
-        
     
     def getAlldata(self):
         self.cursor = mysql.connection.cursor()

@@ -1,4 +1,4 @@
-#Python Class for all admin related queries
+#Python Class for all Order related queries
 #Each method will post a different set of data
 
 from connections import mysql

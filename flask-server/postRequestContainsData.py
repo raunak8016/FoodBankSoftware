@@ -1,4 +1,4 @@
-#Python Class for all requestContains related queries
+#Python Class for all Request_Contains related queries
 #Each method will post a different set of data
 
 from connections import mysql

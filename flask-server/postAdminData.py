@@ -14,7 +14,7 @@ class postAdminDatas(object):
             self.cursor.execute(
                 "INSERT INTO Admin (a_email, fname, lname, shift, volunteer_flag, coordinator_flag, mgr_email) "
                 "VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                (a_email, fname, lname, shift, volunteer_flag, coordinator_flag, manager_email,)
+                (a_email, fname, lname, shift, volunteer_flag, coordinator_flag, manager_email)
             )
             mysql.connection.commit()
             self.cursor.close()

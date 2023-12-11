@@ -9,7 +9,7 @@ class getOrderDatas(object):
 
     def getAlldata(self):
         self.cursor = mysql.connection.cursor()
-        self.cursor.execute("SELECT * FROM `Order`")
+        self.cursor.execute("SELECT * FROM Order")
         aData = self.cursor.fetchall()
         self.cursor.close()
         return aData
