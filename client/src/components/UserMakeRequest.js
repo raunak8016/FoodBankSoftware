@@ -7,7 +7,6 @@ const UserMakeRequest = ({ email }) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [requestSuccessful, setRequestSuccessful] = useState(false);
 
-  // Fetch unique request ID on component load
   useEffect(() => {
     const fetchRequestId = async () => {
       try {
@@ -19,9 +18,8 @@ const UserMakeRequest = ({ email }) => {
     };
 
     fetchRequestId();
-  }, [requestSuccessful]); // Add requestSuccessful to the dependency array
+  }, [requestSuccessful]);
 
-  // Fetch list of items on component load
   useEffect(() => {
     const fetchItems = async () => {
       try {
@@ -35,20 +33,16 @@ const UserMakeRequest = ({ email }) => {
     fetchItems();
   }, []);
 
-  // Handle item selection or unselection
   const handleItemToggle = (itemId) => {
     setSelectedItems((prevItems) => {
       if (prevItems.includes(itemId)) {
-        // Item is already selected, unselect it
         return prevItems.filter((item) => item !== itemId);
       } else {
-        // Item is not selected, select it
         return [...prevItems, itemId];
       }
     });
   };
 
-  // Handle "Make Request" button click
   const handleMakeRequest = async () => {
     if (selectedItems.length === 0) {
       // If no items are selected, show an alert
@@ -57,12 +51,11 @@ const UserMakeRequest = ({ email }) => {
     }
 
     try {
-      // Add the new request
       const addRequestResponse = await axios.post('/addRequest', {
         request_id: requestId,
-        request_admin: null, // Blank for now
-        request_user: email, // Blank for now
-        pickup_date: null, // Blank for now
+        request_admin: null, 
+        request_user: email, 
+        pickup_date: null, 
         request_date: null,
       });
 
@@ -71,7 +64,6 @@ const UserMakeRequest = ({ email }) => {
       if (addRequestStatus === 'true') {
         console.log('Request added successfully!');
         
-        // Add items to the request
         const addItemsResponse = await axios.post('/addRequestContains', {
           id_request: requestId,
           request_item: selectedItems,
@@ -82,16 +74,16 @@ const UserMakeRequest = ({ email }) => {
         if (addItemsStatus === 'true') {
           console.log('Items added to the request successfully!');
           alert('Request and Request_Contains inserted successfully!')
-          setRequestSuccessful(!requestSuccessful); // Update the state to trigger a component refresh
+          setRequestSuccessful(!requestSuccessful);
         } else {
           alert('Failed to add items to the request.');
           console.error('Failed to add items to the request.');
-          setRequestSuccessful(!requestSuccessful); // Update the state to trigger a component refresh
+          setRequestSuccessful(!requestSuccessful);
         }
       } else {
         alert('Failed to create the request.');
         console.error('Failed to create the request.');
-        setRequestSuccessful(!requestSuccessful); // Update the state to trigger a component refresh
+        setRequestSuccessful(!requestSuccessful); 
       }
     } catch (error) {
       console.error('Error creating request:', error);

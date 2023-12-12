@@ -19,11 +19,15 @@ const OrdersTable = () => {
   }, []);
 
   const formatDateString = (dateString) => {
+    console.log(dateString);
     if (dateString) {
+      const date = new Date(dateString);
+      date.setDate(date.getDate() + 1);
+  
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      return new Date(dateString).toLocaleDateString('en-US', options);
+      return date.toLocaleDateString(undefined, options);
     }
-    return ''; // Return an empty string if date is null or empty
+    return ''; 
   };
 
 

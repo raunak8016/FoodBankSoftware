@@ -1,7 +1,6 @@
-// Items.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './styling/items.css'; // Import a CSS file for styling
+import './styling/items.css'; 
 
 const Items = () => {
   const [itemData, setItemData] = useState([]);
@@ -11,11 +10,10 @@ const Items = () => {
     quantity: '',
     storageType: '',
     brand: '',
-    type: false, // Default to toiletry
+    type: false,
   });
 
   useEffect(() => {
-    // Fetch data when the component mounts
     axios.get('/Item')
       .then(response => {
         setItemData(response.data.Item);
@@ -24,9 +22,7 @@ const Items = () => {
   }, []);
 
   const handleUpdateQuantity = (index) => {
-    // Send the updated data to the Flask server for "Quantity" update
-    // You'll need to implement this part based on your server's API
-    const updatedQuantityValue = editedQuantities[index] || itemData[index][1]; // Use edited quantity if available, otherwise use the current quantity
+    const updatedQuantityValue = editedQuantities[index] || itemData[index][1];
     axios.post('/updateItemQuantity', { item_name: itemData[index][0], quantity: updatedQuantityValue })
       .then(response => {
         const success = response.data.status;
@@ -36,48 +32,22 @@ const Items = () => {
         } else {
           const reason = response.data.reason;
           alert("Item quantity update. " + reason);
-          console.log("faliure reason:", reason);
+          console.log("failure reason:", reason);
         }
       })
       .catch(error => console.error('Error updating quantity:', error));
   };
-  
-
-  const handleDelete = (index) => {
-    const updatedItems = [...itemData];
-    updatedItems.splice(index, 1);
-    setItemData(updatedItems);
-    console.log(itemData[index][0]);
-    axios.post('/deleteItem', { item_name: itemData[index][0] })
-      .then(response => {
-        const success = response.data.status;
-        if (success === "true") {
-          console.log("Add item successful!");
-        } else {
-          const reason = response.data.reason;
-          alert("Delete failed. " + reason);
-          console.log("faliure reason:", reason);
-        }
-      })
-      .catch(error => console.error('Error deleting item:', error));
-  };
 
   const handleInputChange = (field, value) => {
-    // Update the local state with the changed value for the new item
     setNewItem(prevItem => ({ ...prevItem, [field]: value }));
   };
 
   const handleAddItem = () => {
-    // Check if all values are entered before adding a new item
     if (Object.values(newItem).every(value => value !== '')) {
-      // Convert the type to a flag (1 for food, 0 for toiletry)
       const newItemWithFlag = { ...newItem, type: newItem.type === 'food' ? 1 : 0 };
 
-      // Add a new item column to the local state
       setItemData([...itemData, Object.values(newItemWithFlag)]);
 
-      // Send the new item data to the Flask server for addition
-      // You'll need to implement this part based on your server's API
       console.log(newItem.type);
       axios.post('/addItem', {
         item_name: newItem.name,
@@ -93,7 +63,7 @@ const Items = () => {
         } else {
           const reason = response.data.reason;
           alert("Add admin failed. " + reason);
-          console.log("faliure reason:", reason);
+          console.log("failure reason:", reason);
         }
           axios.get('/Item')
             .then(response => {
@@ -103,7 +73,6 @@ const Items = () => {
         })
         .catch(error => console.error('Error adding item:', error));
 
-      // Reset the new item state for the next entry
       setNewItem({
         name: '',
         quantity: '',
@@ -149,12 +118,10 @@ const Items = () => {
               <td>{item[4] ? 'food' : 'toiletry'}</td>
               <td>
                 <button onClick={() => handleUpdateQuantity(index)}>Update Quantity</button>
-                <button onClick={() => handleDelete(index)}>Delete</button>
               </td>
             </tr>
           ))}
           <tr>
-            {/* New item row for entering values */}
             <td>
               <input type="text" value={newItem.name} onChange={(e) => handleInputChange('name', e.target.value)} />
             </td>

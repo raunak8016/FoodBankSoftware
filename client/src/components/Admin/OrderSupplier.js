@@ -12,11 +12,9 @@ const OrderSupplier = ({ email }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch suppliers
         const suppliersResponse = await axios.post('/Supplier');
         setSuppliers(suppliersResponse.data.Supplier || []);
 
-        // Fetch items
         const itemsResponse = await axios.get('/Item');
         setItems(itemsResponse.data.Item || []);
       } catch (error) {
@@ -56,10 +54,8 @@ const OrderSupplier = ({ email }) => {
       const { status, reason } = response.data;
 
       if (status === 'true') {
-        // Order added successfully
         setStatus('Order added successfully!');
       } else {
-        // Error adding order
         setStatus(`Failed to add order: ${reason}`);
       }
     } catch (error) {

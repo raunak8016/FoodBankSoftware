@@ -51,7 +51,6 @@ const AdminDashboard = () => {
         <button onClick={() => setShowSection('verifyUser')}>Verify/Check User</button>
         <button onClick={handleLogout}>Logout</button>
       </div>
-      {/* Render sections based on the showSection state */}
       {showSection === 'orders' && <OrdersSection email={email} closeAllSections={closeAllSections} />}
       {showSection === 'clientDonations' && <ClientDonationsSection closeAllSections={closeAllSections} />}
       {showSection === 'addAdmin' && <AddAdminSection closeAllSections={closeAllSections} />}
@@ -97,7 +96,6 @@ const AdminProfile = ({ email }) => {
 
 
 
-// Example section components (you can replace these with your actual components)
 const OrdersSection = ({email}) => {
   return (
     <div>
@@ -138,7 +136,6 @@ const AddAdminSection = () => {
   const handleSubmit = () => {
     axios.post('/admin_signUp', formData)
       .then(response => {
-        // Handle the response from the server as needed
         console.log(response.data);
         
 
@@ -222,23 +219,26 @@ const FulfillOrdersSection = ({email}) => {
     try {
       console.log(`Getting request info...`);
       const response = await axios.post('/Request');
-      setRequestInfo(response.data.Request || []); // Ensure that response.data.Request is an array
+      setRequestInfo(response.data.Request || []);
     } catch (error) {
       console.error('Error fetching request information:', error);
     }
   };
 
   useEffect(() => {
-    // Fetch request information when the component mounts
     fetchRequestInfo();
   }, []);
 
   const formatDateString = (dateString) => {
+    console.log(dateString);
     if (dateString) {
+      const date = new Date(dateString);
+      date.setDate(date.getDate() + 1);
+  
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      return new Date(dateString).toLocaleDateString('en-US', options);
+      return date.toLocaleDateString(undefined, options);
     }
-    return ''; // Return an empty string if date is null or empty
+    return ''; 
   };
 
   const handleFulfillClick = async (requestId) => {
@@ -252,7 +252,6 @@ const FulfillOrdersSection = ({email}) => {
 
       if (updateStatus === 'true') {
         console.log(`Request ${requestId} fulfilled successfully!`);
-        // Refresh request information after fulfillment
         fetchRequestInfo();
       } else {
         console.error(`Failed to fulfill request ${requestId}.`);

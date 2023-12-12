@@ -22,7 +22,6 @@ const ClientDonations = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    // Check if the item is selected and the donor email is not blank
     if (!selectedItem || !donorEmail.trim()) {
       alert('Please select an item and provide a valid donor email.');
       return;
@@ -39,10 +38,8 @@ const ClientDonations = () => {
       const status = response.data.status;
     
       if (status === 'true') {
-        // Donation added successfully
         setStatus('Donation added successfully!');
       } else {
-        // Error adding donation
         setStatus(`Failed to add donation.`);
       }
     } catch (error) {
@@ -97,7 +94,7 @@ const ItemDropdown = ({ onSelect }) => {
     const handleItemChange = (e) => {
       const selectedItemValue = e.target.value;
       setSelectedItem(selectedItemValue);
-      onSelect(selectedItemValue); // Pass the selected item value to the parent component if needed
+      onSelect(selectedItemValue);
     };
   
     return (

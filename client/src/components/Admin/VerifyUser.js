@@ -20,13 +20,10 @@ const VerifyUser = ({email}) => {
       const status = response.data.status;
 
       if (status === 'true') {
-        // Verification updated successfully
         setStatus('Verification updated successfully!');
       } else if (status === 'already') {
-        // Already verified
         setStatus(`User is already verified.`);
       } else {
-        // Error updating verification
         setStatus(`Failed to update verification.`);
       }
     } catch (error) {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Banner from "./Banner"; // Import the Banner component
+import Banner from "./Banner";
 import axios from "axios";
 
 const Signup = () => {
@@ -56,18 +56,14 @@ const Signup = () => {
         console.log("faliure reason:", reason);
       }
 
-      // Handle the response data as needed (e.g., show success message, navigate, etc.)
     } catch (error) {
       console.error("Error during signup:", error);
 
-      // Handle error, show an error message, etc.
-      // For example, if your backend responds with an error message
       alert("Signup failed. Please try again.");
     }
   };
 
   const handleBack = () => {
-    // Navigate back to the home page (/)
     navigate("/");
   };
 

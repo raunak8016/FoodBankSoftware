@@ -27,19 +27,15 @@ const App = () => {
         userType: userType,
       });
 
-      // Assuming the Flask server responds with some data
       const responseData = response.data.status;
 
-      // for testing purposes only
-      // const responseData = "true";
+
 
       console.log("Login response:", responseData);
 
       if (userType === "Admin" && responseData === "true") {
-        // Navigate to the admin dashboard
         navigate(`/admin_dashboard/${email}`);
       } else if (userType === "User" && responseData === "true") {
-        // Navigate to the user dashboard
         navigate(`/user_dashboard/${email}`);
       } else {
         setError("Error: Invalid email for user type!");
@@ -48,7 +44,6 @@ const App = () => {
       console.log("Login response:", responseData);
     } catch (error) {
       console.error("Error during login:", error);
-      // Handle error, show an error message, etc.
       setError("Error: An unexpected error occurred. Please try again.");
     }
   };

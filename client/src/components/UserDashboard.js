@@ -72,7 +72,6 @@ const MakeRequest = ({ email }) => {
   const [requestInfo, setRequestInfo] = useState(null);
 
   useEffect(() => {
-    // Fetch request information when the component mounts
     const fetchRequestInfo = async () => {
       try {
         console.log(`Getting request info for ${email}...`);
@@ -85,21 +84,25 @@ const MakeRequest = ({ email }) => {
     };
 
     fetchRequestInfo();
-  }, [email]); // Fetch request information when the user email changes
+  }, [email]); 
 
   const formatDateString = (dateString) => {
+    console.log(dateString);
     if (dateString) {
+      const date = new Date(dateString);
+
+      date.setDate(date.getDate() + 1);
+  
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      return new Date(dateString).toLocaleDateString('en-US', options);
+      return date.toLocaleDateString(undefined, options);
     }
-    return ''; // Return an empty string if date is null or empty
+    return ''; 
   };
 
   return (
     <div>
       <h2>Hamper Request</h2>
       <h3>Make Request:</h3>
-      {/* Assuming UserMakeRequest is your component for making requests */}
       <UserMakeRequest email={email} />
       <h3>Past Requests:</h3>
       {requestInfo ? (

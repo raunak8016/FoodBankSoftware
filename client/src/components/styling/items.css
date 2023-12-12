@@ -1,4 +1,3 @@
-/* Items.css */
 
 .items-table {
     width: 100%;
@@ -13,6 +12,6 @@
   }
   
   .editable {
-    border: 2px solid #3498db; /* Set a different border color for editable cells */
+    border: 2px solid #3498db;
   }
   
