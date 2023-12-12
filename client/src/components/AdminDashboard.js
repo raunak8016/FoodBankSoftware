@@ -121,7 +121,7 @@ const AddAdminSection = () => {
     firstName: '',
     lastName: '',
     adminType: 'volunteer',
-    shiftTime: '',
+    shift: '',
     managerEmail: ''
   });
 
@@ -191,8 +191,8 @@ const AddAdminSection = () => {
 
         <label>Shift Time:</label>
         <textarea
-          name="shiftTime"
-          value={formData.shiftTime}
+          name="shift"
+          value={formData.shift}
           onChange={handleChange}
           placeholder="Enter your weekly schedule (e.g., Mon-06:00-15:00, Tue-09:00-17:00)"
         />

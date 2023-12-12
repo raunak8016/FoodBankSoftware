@@ -68,7 +68,7 @@ def admin_signUp():
         adminType = data.get('adminType')#volunteer or coordinator
         shift = data.get("shift")
         managerEmail = data.get("managerEmail")
-        
+        print(shift)
         volunteer_flag = 0
         coordinator_flag = 0
 
